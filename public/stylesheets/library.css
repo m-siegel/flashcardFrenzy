@@ -63,3 +63,8 @@ body {
 .filters {
   white-space:  pre;
 }
+
+.startStudyButton {
+  background-color: #3ce036;
+  color: #FFFFFF;
+}
