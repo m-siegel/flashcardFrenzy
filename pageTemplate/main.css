@@ -1,0 +1,39 @@
+:root {
+  --armea-dark-grey: #27292b;
+  --armea-sea-green: #02CF9E;
+  --armea-salmon: #F25C5C;
+  --armea-light-blue: #0279CF;
+  --armea-orange: #FF6B00;
+}
+
+h1 {
+  background-color: var(--armea-dark-grey);
+  color: #FFF;
+  text-align: center;
+}
+
+#armea-top-banner {
+  display: flex;
+}
+
+body {
+  box-sizing: border-box;
+}
+
+.armea-side-nav-outer {
+  border-right: 2px solid var(--armea-light-blue);
+}
+
+/* .armea-side-nav {
+  display: flex;
+  flex-grow: 1;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+} */
+
+/* .armea-container {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  gap: 20px;
+} */
