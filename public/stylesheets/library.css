@@ -16,13 +16,15 @@
 
 .sectionHeader {
   text-align: center;
+  font-family: 'Open Sans', sans-serif;
 }
 
+/*
 body {
   margin: 0;
   padding: 0;
 }
-
+*/
 
 
 .deckIcon {
@@ -32,13 +34,18 @@ body {
   border-radius: 30px;
   background-color: beige;
   color: blue;
-  padding: 15px;
+  padding: 12px;
   margin: 10px;
 }
 
 .iconText {
   text-align: center;
-  color: green;
+  color: var(--armea-bright-green);
+  font-family: 'Open Sans', sans-serif;
+}
+
+.optionsText {
+  text-align: center;
   font-family: 'Open Sans', sans-serif;
 }
 
@@ -67,4 +74,24 @@ body {
 .startStudyButton {
   background-color: #3ce036;
   color: #FFFFFF;
+}
+
+.offcanvas-parent {
+  position: relative;
+  overflow: hidden;
+}
+
+
+.filterOptionButton {
+  margin: 10px;
+}
+
+.offcanvas {
+  position: absolute;
+}
+
+.modal-backdrop {
+  position: absolute;
+  height: 100%;
+  width: 100%;
 }
