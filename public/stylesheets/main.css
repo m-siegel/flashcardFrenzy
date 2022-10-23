@@ -6,6 +6,18 @@
   --armea-orange: #FF6B00;
 }
 
+body {
+  /* they added */
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  /* our style */
+  box-sizing: border-box;
+}
+
+a {
+  color: #00B7FF;
+}
+
 h1 {
   background-color: var(--armea-dark-grey);
   color: #FFF;
@@ -14,10 +26,6 @@ h1 {
 
 #armea-top-banner {
   display: flex;
-}
-
-body {
-  box-sizing: border-box;
 }
 
 .armea-side-nav-outer {
