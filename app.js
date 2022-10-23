@@ -1,5 +1,5 @@
 import express from "express";
-import path from "path";
+// import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import dotenv from "dotenv";
@@ -21,7 +21,8 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static("./public"));
 
 app.use("/edit-deck", editDeckRouter);
 app.use("/explore", exploreRouter);
@@ -32,4 +33,4 @@ app.use("/register", registerRouter);
 app.use("/study", studyRouter);
 app.use("/user-settings", userSettingsRouter);
 
-module.exports = app;
+export default app;
