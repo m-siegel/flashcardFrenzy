@@ -4,23 +4,22 @@
  * Module dependencies.
  */
 
-import app from "../app";
-import d from "debug";
-const debug = d("flashcardfrenzy:server");
-import http from "http";
+var app = require("../app");
+var debug = require("debug")("flashcardfrenzy:server");
+var http = require("http");
 
 /**
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || "3000");
+var port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 /**
  * Create HTTP server.
  */
 
-const server = http.createServer(app);
+var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -35,7 +34,7 @@ server.on("listening", onListening);
  */
 
 function normalizePort(val) {
-  let port = parseInt(val, 10);
+  var port = parseInt(val, 10);
 
   if (isNaN(port)) {
     // named pipe
@@ -59,7 +58,7 @@ function onError(error) {
     throw error;
   }
 
-  let bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+  var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -81,7 +80,7 @@ function onError(error) {
  */
 
 function onListening() {
-  let addr = server.address();
-  let bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+  var addr = server.address();
+  var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
   debug("Listening on " + bind);
 }

@@ -1,12 +1,21 @@
-let express = require("express");
-let path = require("path");
-let cookieParser = require("cookie-parser");
-let logger = require("morgan");
+import express from "express";
+import path from "path";
+import cookieParser from "cookie-parser";
+import logger from "morgan";
+import dotenv from "dotenv";
 
-let indexRouter = require("./routes/index");
-let usersRouter = require("./routes/users");
+import editDeckRouter from "./routes/edit-deck.js";
+import exploreRouter from "./routes/explore.js";
+import indexRouter from "./routes/index.js";
+import loginRouter from "./routes/login.js";
+import myLibraryRouter from "./routes/my-library.js";
+import registerRouter from "./routes/register.js";
+import studyRouter from "./routes/study.js";
+import userSettingsRouter from "./routes/user-settings.js";
 
-let app = express();
+dotenv.config();
+
+const app = express();
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -14,7 +23,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use("/edit-deck", editDeckRouter);
+app.use("/explore", exploreRouter);
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/login", loginRouter);
+app.use("/my-library", myLibraryRouter);
+app.use("/register", registerRouter);
+app.use("/study", studyRouter);
+app.use("/user-settings", userSettingsRouter);
 
 module.exports = app;
