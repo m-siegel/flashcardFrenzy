@@ -16,6 +16,7 @@ import myLibraryRouter from "./routes/my-library.js";
 import registerRouter from "./routes/register.js";
 import studyRouter from "./routes/study.js";
 import userSettingsRouter from "./routes/user-settings.js";
+import logoutRouter from "./routes/logout.js";
 // import welcomePRouter from "./routes/welcomeP.js";
 // import homePRouter from "./routes/homeP.js";
 
@@ -60,5 +61,7 @@ app.use("/study", studyRouter);
 app.use("/user-settings", userSettingsRouter);
 // app.use("./welcome", welcomePRouter);
 // app.use("./home", homePRouter);
+
+app.use("/logout", logoutRouter);
 
 export default app;

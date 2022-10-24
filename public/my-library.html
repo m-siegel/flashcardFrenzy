@@ -48,7 +48,12 @@
             <li><a class="dropdown-item" href="#">My Library</a></li>
             <li><a class="dropdown-item" href="#">Explore</a></li>
             <li><a class="dropdown-item" href="#">Create</a></li>
-            <li><a class="dropdown-item" href="#">Log Out</a></li>
+            <li>
+              <form action="/logout?_method=DELETE" method="POST">
+                <button id="dropdownLogoutBtn" type="submit">Log Out</button>
+              </form>
+            </li>
+            <!-- <li><a class="dropdown-item" href="#">Log Out</a></li> -->
           </ul>
         </nav>
 
@@ -62,7 +67,12 @@
               </li>
               <li class="nav-item"><a href="#" class="nav-link">Explore</a></li>
               <li class="nav-item"><a href="#" class="nav-link">Create</a></li>
-              <li class="nav-item"><a href="#" class="nav-link">Log Out</a></li>
+              <li>
+                <form action="/logout?_method=DELETE" method="POST">
+                  <button id="navbarLogoutBtn" type="submit">Log Out</button>
+                </form>
+              </li>
+              <!-- <li class="nav-item"><a href="#" class="nav-link">Log Out</a></li> -->
             </ul>
           </div>
         </nav>
