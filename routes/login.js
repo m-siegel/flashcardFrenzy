@@ -9,6 +9,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 var router = express.Router();
 
 router.get("/", checkNotAuthenticated, (req, res) => {
+  // Code source: https://stackoverflow.com/questions/14594121/express-res-sendfile-throwing-forbidden-error
   res.sendFile("login.html", {
     // resolve() creates abs path to parent dir of login.html
     root: resolve(__dirname, "../public"),
