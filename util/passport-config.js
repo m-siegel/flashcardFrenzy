@@ -6,7 +6,7 @@ const LocalStrategy = pl.Strategy;
 function initialize(passport, getUserByUsername, getUserById) {
   const authenticateUser = async (username, password, done) => {
     const invalidCredMsg = "Invalid username or password.";
-    const user = getUserByUsername(username);
+    const user = await getUserByUsername(username);
     if (user == null) {
       return done(null, false, { message: invalidCredMsg });
     }
