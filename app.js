@@ -3,6 +3,9 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import dotenv from "dotenv";
+import flash from "express-flash";
+import session from "express-session";
+import methodOverride from "method-override";
 
 import editDeckRouter from "./routes/edit-deck.js";
 import exploreRouter from "./routes/explore.js";
@@ -12,6 +15,8 @@ import myLibraryRouter from "./routes/my-library.js";
 import registerRouter from "./routes/register.js";
 import studyRouter from "./routes/study.js";
 import userSettingsRouter from "./routes/user-settings.js";
+// import welcomePRouter from "./routes/welcomeP.js";
+// import homePRouter from "./routes/homeP.js";
 
 dotenv.config();
 
@@ -20,6 +25,14 @@ const app = express();
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(flash());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static("./public"));
@@ -32,5 +45,7 @@ app.use("/my-library", myLibraryRouter);
 app.use("/register", registerRouter);
 app.use("/study", studyRouter);
 app.use("/user-settings", userSettingsRouter);
+// app.use("./welcome", welcomePRouter);
+// app.use("./home", homePRouter);
 
 export default app;
