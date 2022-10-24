@@ -39,13 +39,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride("_method"));
 app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, "public")));
-app.use(express.static("./public"));
+// TODO -- should we remove so they can't access without our routes?
+// app.use(express.static("./public"));
 
 app.use("/edit-deck", editDeckRouter);
 app.use("/explore", exploreRouter);
 app.use("/", indexRouter);
 app.use("/login", loginRouter);
+// If we use express.static, we need to handle all the html request
+// app.use("/login.html", loginRouter);
 app.use("/my-library", myLibraryRouter);
 app.use("/register", registerRouter);
 app.use("/study", studyRouter);
