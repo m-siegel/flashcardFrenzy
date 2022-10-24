@@ -4,7 +4,7 @@ import express from "express";
 import { checkNotAuthenticated } from "../util/check-auths.js";
 import loginRouter from "login.js";
 
-var router = express.Router();
+const router = express.Router();
 
 // /* GET home page. */
 // router.get("/", function (req, res, next) {

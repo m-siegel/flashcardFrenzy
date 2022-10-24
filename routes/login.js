@@ -4,7 +4,7 @@ import { checkNotAuthenticated } from "../util/check-auths.js";
 // To get absolute path based on current location
 import pathToPublicDir from "./pathToPublicDir.js";
 
-var router = express.Router();
+const router = express.Router();
 
 router.get("/", checkNotAuthenticated, (req, res) => {
   // Code source: https://stackoverflow.com/questions/14594121/express-res-sendfile-throwing-forbidden-error
