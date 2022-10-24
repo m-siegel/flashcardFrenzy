@@ -1,5 +1,5 @@
 import express from "express";
-import { checkAuthenticated } from "../util/check-auths";
+import { checkAuthenticated } from "../util/check-auths.js";
 
 var router = express.Router();
 

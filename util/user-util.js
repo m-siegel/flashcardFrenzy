@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { addUser, getUserByUsername } from "../databaseConnect/userConnect";
+import { addUser, getUserByUsername } from "../databaseConnect/userConnect.js";
 
 export async function createUser(first, last, username, rawPassword) {
   const salt = bcrypt.genSalt();

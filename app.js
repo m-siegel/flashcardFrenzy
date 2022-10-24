@@ -15,6 +15,7 @@ import myLibraryRouter from "./routes/my-library.js";
 import registerRouter from "./routes/register.js";
 import studyRouter from "./routes/study.js";
 import userSettingsRouter from "./routes/user-settings.js";
+import passport from "passport";
 // import welcomePRouter from "./routes/welcomeP.js";
 // import homePRouter from "./routes/homeP.js";
 
@@ -25,6 +26,7 @@ const app = express();
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+// https://www.youtube.com/watch?v=-RCnNyD0L-s
 app.use(flash());
 app.use(
   session({
@@ -33,6 +35,9 @@ app.use(
     saveUninitialized: false,
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(methodOverride("_method"));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static("./public"));

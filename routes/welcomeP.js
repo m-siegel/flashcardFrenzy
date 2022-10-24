@@ -1,7 +1,7 @@
 // USE LATER
 
 import express from "express";
-import { checkNotAuthenticated } from "../util/check-auths";
+import { checkNotAuthenticated } from "../util/check-auths.js";
 import loginRouter from "login.js";
 
 var router = express.Router();
