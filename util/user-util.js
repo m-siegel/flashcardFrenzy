@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { addUser, getUserByUsername } from "../databaseConnect/userConnect.js";
 
 export async function createUser(first, last, username, rawPassword) {
-  const salt = bcrypt.genSalt();
+  const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(rawPassword, salt);
 
   // make obj
