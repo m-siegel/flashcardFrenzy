@@ -4,12 +4,12 @@ import { checkNotAuthenticated } from "../util/check-auths.js";
 
 var router = express.Router();
 
-router.get("/login", checkNotAuthenticated, (req, res) => {
-  res.render("l/ogin");
+router.get("/", checkNotAuthenticated, (req, res) => {
+  res.render("/login");
 });
 
 router.post(
-  "/login",
+  "/",
   checkNotAuthenticated,
   passport.authenticate("local", {
     successRedirect: "/my-library",
