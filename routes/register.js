@@ -1,16 +1,13 @@
 import express from "express";
 import { checkNotAuthenticated } from "../util/check-auths.js";
 import { availableUsername, createAndAddUser } from "../util/user-util.js";
-// To get absolute path based on current location
-import { dirname, resolve } from "path";
-import { fileURLToPath } from "url";
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import pathToPublicDir from "./pathToPublicDir.js";
 
 var router = express.Router();
 
 router.get("/", checkNotAuthenticated, (req, res) => {
   res.sendFile("register.html", {
-    root: resolve(__dirname, "../public"),
+    root: pathToPublicDir,
   });
 });
 

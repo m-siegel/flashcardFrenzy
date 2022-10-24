@@ -2,9 +2,7 @@ import express from "express";
 import passport from "passport";
 import { checkNotAuthenticated } from "../util/check-auths.js";
 // To get absolute path based on current location
-import { dirname, resolve } from "path";
-import { fileURLToPath } from "url";
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import pathToPublicDir from "./pathToPublicDir.js";
 
 var router = express.Router();
 
@@ -12,7 +10,7 @@ router.get("/", checkNotAuthenticated, (req, res) => {
   // Code source: https://stackoverflow.com/questions/14594121/express-res-sendfile-throwing-forbidden-error
   res.sendFile("login.html", {
     // resolve() creates abs path to parent dir of login.html
-    root: resolve(__dirname, "../public"),
+    root: pathToPublicDir,
   });
 });
 
