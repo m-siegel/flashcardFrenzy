@@ -9,7 +9,7 @@
 
 body {
   /* they added */
-  padding: 50px;
+  /* padding: 50px; */
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   /* our style */
   box-sizing: border-box;
@@ -19,14 +19,17 @@ a {
   color: #00B7FF;
 }
 
-h1 {
+#armea-top-banner > div.row {
+  /* display: flex; */
+  min-height: 10vh;
   background-color: var(--armea-dark-grey);
   color: #FFF;
+  align-items: center;
   text-align: center;
 }
 
-#armea-top-banner {
-  display: flex;
+#main-content {
+  margin-top: 5px;
 }
 
 .armea-side-nav-outer {
