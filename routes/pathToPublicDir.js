@@ -1,3 +1,4 @@
+/*Ilana-Mahmea Siegel*/
 // To get absolute path based on current location
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";

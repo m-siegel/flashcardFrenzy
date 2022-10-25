@@ -1,3 +1,5 @@
+/*This is the same code as devFilesToDelete/mongoConnect. Marking this file for deletion.*/
+
 require("dotenv").config();
 const {MongoClient} = require("mongodb");
 

@@ -1,3 +1,4 @@
+/*Entire file by Armen Sarkisian*/
 const deckGrid = document.querySelector("#deckGrid");
 
 function generateDeckIcon(author, name, stats) {

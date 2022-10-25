@@ -1,3 +1,4 @@
+/*Ilana-Mahmea Siegel*/
 // Source: https://www.youtube.com/watch?v=-RCnNyD0L-s
 import bcrypt from "bcrypt";
 import pl from "passport-local";

@@ -1,3 +1,4 @@
+/*Armen Sarkisian and Ilana-Mahmea Siegel (pair programming) */
 import express from "express";
 import { checkAuthenticated } from "../util/check-auths.js";
 import pathToPublicDir from "./pathToPublicDir.js";

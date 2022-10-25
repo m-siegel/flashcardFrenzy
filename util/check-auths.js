@@ -1,3 +1,4 @@
+/*Ilana-Mahmea Siegel*/
 // Source: https://www.youtube.com/watch?v=-RCnNyD0L-s
 export function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {

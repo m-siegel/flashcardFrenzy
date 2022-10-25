@@ -1,3 +1,4 @@
+/*Armen Sarkisian and Ilana-Mahmea Siegel (pair programming) */
 import bcrypt from "bcrypt";
 // import { addUser, getUserByUsername } from "../databaseConnect/userConnect.js";
 import { getUserByUsername } from "../databaseConnect/userConnect.js";

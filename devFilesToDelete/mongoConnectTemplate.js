@@ -1,3 +1,5 @@
+/*By Ilana-Mahmea Siegel and Armen Sarkisian*/
+
 require("dotenv").config();
 const {MongoClient} = require("mongodb");
 
@@ -32,12 +34,3 @@ async function listDatabases(client) {
     console.log(`_ ${db.name}`);
   });
 }
-
-
-/*async function addUserTest(user, client) {
-  const user = {name: "Armen12", email: "a@rmen.com"};
-  const usersDB = "User";
-
-
-}
-*/

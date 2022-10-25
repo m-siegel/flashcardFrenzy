@@ -1,3 +1,4 @@
+/*Armen Sarkisian and Ilana-Mahmea Siegel (pair programming) */
 import express from "express";
 import { checkNotAuthenticated } from "../util/check-auths.js";
 import { availableUsername, createAndAddUser } from "../util/user-util.js";

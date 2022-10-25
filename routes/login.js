@@ -1,3 +1,4 @@
+/*Armen Sarkisian and Ilana-Mahmea Siegel (pair programming) */
 import express from "express";
 import passport from "passport";
 import { checkNotAuthenticated } from "../util/check-auths.js";
