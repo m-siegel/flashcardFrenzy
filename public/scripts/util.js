@@ -1,7 +1,37 @@
+/** Ilana-Mahmea */
+
 function Util() {
   const util = {};
 
-  // TODO -- show message function: success, neutral, error
+  /**
+   * Appends a Bootstrap dismissable alert to the parameter parentElement. Color is determined by
+   * the alertType parameter and content by the msgHeader and msgBody parameters.
+   * @param {HTML element} parentElement   The parent element in which to place this alert.
+   * @param {string} alertType   One of: primary, secondary, success, danger, warning, info, light or dark.
+   * @param {string} msgBody   The main message body.
+   * @param {string} msgHeader   The message header (if any) to be emphasized.
+   */
+  util.addAlert = function (parentElement, alertType, msgBody, msgHeader) {
+    const newAlert = document.createElement("div");
+    newAlert.innerHTML = util.getNewAlert(alertType, msgBody, msgHeader);
+    parentElement.append(newAlert);
+  };
+
+  /**
+   * Returns the HTML for a Bootstrap dismissable alert of the parameter type (danger, warning, etc.),
+   * with the parameter header (in bold) and body.
+   * @param {string} alertType   One of: primary, secondary, success, danger, warning, info, light or dark.
+   * @param {string} msgBody   The main message body.
+   * @param {string} msgHeader   The message header (if any) to be emphasized.
+   * @returns {string}   The HTML for a Bootstrap dismissable alert.
+   */
+  util.getNewAlert = function (alertType, msgBody, msgHeader) {
+    const alert = `<div class="alert alert-${alertType} alert-dismissible fade show" role="alert">
+    <strong>${msgHeader}</strong> ${msgBody}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>`;
+    return alert;
+  };
 
   util.redirect = function redirect(page) {
     window.location.replace(page + ".html");
