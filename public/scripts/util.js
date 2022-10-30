@@ -33,6 +33,10 @@ function Util() {
     return alert;
   };
 
+  /**
+   * Switches the window's location to the parameter page.html.
+   * @param {string} page   New location without .html extension.
+   */
   util.redirect = function redirect(page) {
     window.location.replace(page + ".html");
   };

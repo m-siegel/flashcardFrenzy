@@ -11,6 +11,7 @@ function LoginTest() {
       async function () {
         // set up login form listener
         const form = document.querySelector("form");
+        const msgSpot = document.querySelector("#messageSpot");
         form.addEventListener("submit", async (evt) => {
           evt.preventDefault();
           let res;
@@ -27,11 +28,11 @@ function LoginTest() {
               if (res.success) {
                 util.redirect("/logged-in-demo");
               } else {
-                util.showNeutralMessage(res.msg);
+                util.addAlert(msgSpot, "warning", res.msg, "Login Failed");
               }
             }
           } catch (err) {
-            util.showErrorMessage(err);
+            util.addAlert(msgSpot, "danger", err, "ERROR:");
           }
         });
       },
