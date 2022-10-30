@@ -7,14 +7,15 @@ const LocalStrategy = pl.Strategy;
 function initialize(passport, getUserByUsername, getUserById) {
   const authenticateUser = async (username, password, done) => {
     const invalidCredMsg = "Invalid username or password.";
-    const user = await getUserByUsername(username);
-    if (user == null) {
+    const res = await getUserByUsername(username);
+
+    if (!res.success) {
       return done(null, false, { message: invalidCredMsg });
     }
 
     try {
-      if (await bcrypt.compare(password, user.password)) {
-        return done(null, user);
+      if (await bcrypt.compare(password, res.user.password)) {
+        return done(null, res.user);
       } else {
         return done(null, false, { message: invalidCredMsg });
       }
