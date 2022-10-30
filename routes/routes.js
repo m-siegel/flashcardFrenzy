@@ -27,13 +27,25 @@ router.get("/loginFailed", (req, res) => {
   res.json({ success: false, msg: "Invalid username or password." });
 });
 
-router.get("/loginSucceeded", (req, res) => {
+router.get("/loginSucceeded", async (req, res) => {
   req.session.manualData = { username: "", currentDeck: "" };
-  const dbResponse = getUserById(req.session.passport.user.id);
+  const dbResponse = await getUserById(req.session.passport.user);
   if (dbResponse.success) {
     req.session.manualData.username = dbResponse.user.username;
   }
   res.json({ success: true, msg: "Successful login" });
+});
+
+router.post("/getUsername", (req, res) => {
+  res.json({ username: req.session.manualData.username });
+});
+
+router.post("/getUserId", (req, res) => {
+  res.json({ user: req.session.passport.user });
+});
+
+router.post("/getCurrentDeck", (req, res) => {
+  res.json({ currentDeck: req.session.manualData.currentDeck });
 });
 
 // TODO -- understand
