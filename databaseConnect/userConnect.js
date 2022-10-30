@@ -3,12 +3,11 @@
 import * as mongodb from "mongodb";
 
 // const uri = process.env.DB_URI || "mongodb://localhost:27017";
-const uri = "mongodb://localhost:27017";
+
 
 const userConnect = {};
+const databaseName = "MainDatabase";
 
-// const databaseName = "MainDatabase";
-const databaseName = "FlashcardFrenzy";
 const collectionName = "Users";
 userConnect.databaseName = databaseName;
 userConnect.collectionName = collectionName;
@@ -22,6 +21,7 @@ userConnect.collectionName = collectionName;
  *                       err: null or the error that was caught}
  */
 export async function addUser(userObj) {
+  const uri = process.env.DB_URI || "mongodb://localhost:27017";
   const client = new mongodb.MongoClient(uri);
 
   try {
@@ -66,6 +66,7 @@ userConnect.addUser = addUser;
  */
 export async function getUserById(idString) {
   const id = new mongodb.ObjectId(idString);
+  const uri = process.env.DB_URI || "mongodb://localhost:27017";
   const client = new mongodb.MongoClient(uri);
 
   try {
@@ -96,6 +97,7 @@ userConnect.getUserById = getUserById;
  *                       err: null or the error that was caught}
  */
 export async function getUserByUsername(username) {
+  const uri = process.env.DB_URI || "mongodb://localhost:27017";
   const client = new mongodb.MongoClient(uri);
 
   try {
@@ -126,6 +128,7 @@ userConnect.getUserByUsername = getUserByUsername;
  */
 export async function getDecksInLibrary(idString) {
   const id = new mongodb.ObjectId(idString);
+  const uri = process.env.DB_URI || "mongodb://localhost:27017";
   const client = new mongodb.MongoClient(uri);
 
   try {
@@ -167,6 +170,7 @@ userConnect.getDecksInLibrary = getDecksInLibrary;
  */
 export async function updateDecks(idString, newDecksList) {
   const id = new mongodb.ObjectId(idString);
+  const uri = process.env.DB_URI || "mongodb://localhost:27017";
   const client = new mongodb.MongoClient(uri);
 
   try {
@@ -216,6 +220,7 @@ userConnect.updateDecks = updateDecks;
  */
 export async function insertDeck(idString, deckId) {
   const id = new mongodb.ObjectId(idString);
+  const uri = process.env.DB_URI || "mongodb://localhost:27017";
   const client = new mongodb.MongoClient(uri);
 
   try {
@@ -265,6 +270,7 @@ userConnect.insertDeck = insertDeck;
  */
 export async function updateUsername(idString, newUsername) {
   const id = new mongodb.ObjectId(idString);
+  const uri = process.env.DB_URI || "mongodb://localhost:27017";
   const client = new mongodb.MongoClient(uri);
   let oldUsername = "";
 
@@ -336,6 +342,7 @@ userConnect.updateUsername = updateUsername;
  */
 export async function deleteUser(idString) {
   const id = new mongodb.ObjectId(idString);
+  const uri = process.env.DB_URI || "mongodb://localhost:27017";
   const client = new mongodb.MongoClient(uri);
 
   try {
