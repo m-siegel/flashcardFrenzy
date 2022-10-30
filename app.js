@@ -9,15 +9,15 @@ import session from "express-session";
 import methodOverride from "method-override";
 import passport from "passport";
 
-import editDeckRouter from "./routes/edit-deck.js";
-import exploreRouter from "./routes/explore.js";
-import indexRouter from "./routes/index.js";
-import loginRouter from "./routes/login.js";
-import myLibraryRouter from "./routes/my-library.js";
-import registerRouter from "./routes/register.js";
-import studyRouter from "./routes/study.js";
-import userSettingsRouter from "./routes/user-settings.js";
-import logoutRouter from "./routes/logout.js";
+// import editDeckRouter from "./routes/edit-deck.js";
+// import exploreRouter from "./routes/explore.js";
+// import indexRouter from "./routes/index.js";
+// import loginRouter from "./routes/login.js";
+// import myLibraryRouter from "./routes/my-library.js";
+// import registerRouter from "./routes/register.js";
+// import studyRouter from "./routes/study.js";
+// import userSettingsRouter from "./routes/user-settings.js";
+// import logoutRouter from "./routes/logout.js";
 // import welcomePRouter from "./routes/welcomeP.js";
 // import homePRouter from "./routes/homeP.js";
 
@@ -28,7 +28,6 @@ import {
 } from "./databaseConnect/userConnect.js";
 
 dotenv.config();
-
 
 const app = express();
 
@@ -53,17 +52,18 @@ app.use(cookieParser());
 // TODO -- figure out how to deal with .html
 app.use(express.static("./public"));
 
-app.use("/edit-deck", editDeckRouter);
-app.use("/explore", exploreRouter);
-app.use("/", indexRouter);
-app.use("/login", loginRouter);
-app.use("/my-library", myLibraryRouter);
-app.use("/register", registerRouter);
-app.use("/study", studyRouter);
-app.use("/user-settings", userSettingsRouter);
-// app.use("./welcome", welcomePRouter);
-// app.use("./home", homePRouter);
+// app.use("/edit-deck", editDeckRouter);
+// app.use("/explore", exploreRouter);
+// // app.use("/", indexRouter);
+// app.use("/login", loginRouter);
+// app.use("/my-library", myLibraryRouter);
+// app.use("/register", registerRouter);
+// app.use("/study", studyRouter);
+// app.use("/user-settings", userSettingsRouter);
+// app.use("/logout", logoutRouter);
 
-app.use("/logout", logoutRouter);
+// TODO -- better formatting
+import mainRouter from "./routes/routes.js";
+app.use("/", mainRouter);
 
 export default app;
