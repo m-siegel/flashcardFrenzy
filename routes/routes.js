@@ -48,45 +48,63 @@ router.post("/getCurrentDeck", (req, res) => {
   res.json({ currentDeck: req.session.manualData.currentDeck });
 });
 
-// TODO -- understand
 router.post("/logoutUser", (req, res) => {
+  const body = {
+    success: false,
+    type: "req.logout()",
+    msg: "logout init message",
+    errors: [],
+  };
   req.logout((err) => {
     if (err) {
-      res.json({ success: false, msg: "Error logging out.", err: err });
-    }
-    // Base on https://expressjs.com/en/resources/middleware/session.html
-    req.session.user = null; // Destroy session
-    req.session.manualData = null;
-    req.session.save((err) => {
-      // Save logout
-      if (err) {
-        res.json({
-          success: false,
-          msg: "Error saving logout.",
-          err: err,
-        });
-      }
-      req.session.regenerate((err) => {
-        // Regenerate to guard against session fixation
+      body.errors.push({
+        stage: "req.logout()",
+        msg: "Error with req.logout(). Attempting manual logout.",
+        err: err,
+      });
+      body.type = "manual";
+      // Try manual logout
+
+      // Base on https://expressjs.com/en/resources/middleware/session.html
+      req.session.passport = null; // Destroy session
+      req.session.manualData = null;
+      let e = false;
+      req.session.save((err) => {
+        // Save null variables
         if (err) {
-          res.json({
-            success: false,
-            msg: "Error regenerating session after logout.",
+          e = true;
+          body.errors.push({
+            stage: "manual logout - req.session.save()",
+            msg: "Error saving deleted session. Attempting session regeneration.",
             err: err,
           });
         }
+        req.session.regenerate((err) => {
+          // Regenerate to guard against session fixation
+          if (err) {
+            e = true;
+            body.errors.push({
+              stage: "manual logout - req.session.regenerate()",
+              msg: "Error regenerating session.",
+              err: err,
+            });
+          }
+        });
       });
-    });
-    res.json({
-      success: true,
-      msg: "Successfully logged out",
-      err: null,
-    });
-  });
-  res.json({
-    success: true,
-    msg: "Successfully logged out",
-    err: null,
+      body.success = !e;
+      if (!e) {
+        body.msg =
+          "Failed passport logout. Successful manual logout. See errors list.";
+      } else {
+        body.msg =
+          "Failed passport logout. Failed manual logout. See errors list.";
+      }
+      return res.json(body);
+    }
+
+    body.success = true;
+    body.msg = "Successful passport logout.";
+    return res.json(body);
   });
 });
 

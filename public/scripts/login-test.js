@@ -14,8 +14,7 @@ function LoginTest() {
     } else {
       // Redirect if logged in
       console.log("auth");
-      util.redirect("/my-library");
-      // window.location.replace("/my-library.html");
+      util.redirect("/logged-in-demo");
     }
   };
 
@@ -36,7 +35,7 @@ function LoginTest() {
         if (res.ok) {
           res = await res.json();
           if (res.success) {
-            util.redirect("/my-library");
+            util.redirect("/logged-in-demo");
           } else {
             util.showNeutralMessage(res.msg);
           }
