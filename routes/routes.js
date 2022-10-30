@@ -27,54 +27,84 @@ router.get("/loginFailed", (req, res) => {
   res.json({ success: false, msg: "Invalid username or password." });
 });
 
-router.get("/loginSucceeded", (req, res) => {
+router.get("/loginSucceeded", async (req, res) => {
   req.session.manualData = { username: "", currentDeck: "" };
-  const dbResponse = getUserById(req.session.passport.user.id);
+  const dbResponse = await getUserById(req.session.passport.user);
   if (dbResponse.success) {
     req.session.manualData.username = dbResponse.user.username;
   }
   res.json({ success: true, msg: "Successful login" });
 });
 
-// TODO -- understand
+router.post("/getUsername", (req, res) => {
+  res.json({ username: req.session.manualData.username });
+});
+
+router.post("/getUserId", (req, res) => {
+  res.json({ user: req.session.passport.user });
+});
+
+router.post("/getCurrentDeck", (req, res) => {
+  res.json({ currentDeck: req.session.manualData.currentDeck });
+});
+
 router.post("/logoutUser", (req, res) => {
+  const body = {
+    success: false,
+    type: "req.logout()",
+    msg: "logout init message",
+    errors: [],
+  };
   req.logout((err) => {
     if (err) {
-      res.json({ success: false, msg: "Error logging out.", err: err });
-    }
-    // Base on https://expressjs.com/en/resources/middleware/session.html
-    req.session.user = null; // Destroy session
-    req.session.manualData = null;
-    req.session.save((err) => {
-      // Save logout
-      if (err) {
-        res.json({
-          success: false,
-          msg: "Error saving logout.",
-          err: err,
-        });
-      }
-      req.session.regenerate((err) => {
-        // Regenerate to guard against session fixation
+      body.errors.push({
+        stage: "req.logout()",
+        msg: "Error with req.logout(). Attempting manual logout.",
+        err: err,
+      });
+      body.type = "manual";
+      // Try manual logout
+
+      // Base on https://expressjs.com/en/resources/middleware/session.html
+      req.session.passport = null; // Destroy session
+      req.session.manualData = null;
+      let e = false;
+      req.session.save((err) => {
+        // Save null variables
         if (err) {
-          res.json({
-            success: false,
-            msg: "Error regenerating session after logout.",
+          e = true;
+          body.errors.push({
+            stage: "manual logout - req.session.save()",
+            msg: "Error saving deleted session. Attempting session regeneration.",
             err: err,
           });
         }
+        req.session.regenerate((err) => {
+          // Regenerate to guard against session fixation
+          if (err) {
+            e = true;
+            body.errors.push({
+              stage: "manual logout - req.session.regenerate()",
+              msg: "Error regenerating session.",
+              err: err,
+            });
+          }
+        });
       });
-    });
-    res.json({
-      success: true,
-      msg: "Successfully logged out",
-      err: null,
-    });
-  });
-  res.json({
-    success: true,
-    msg: "Successfully logged out",
-    err: null,
+      body.success = !e;
+      if (!e) {
+        body.msg =
+          "Failed passport logout. Successful manual logout. See errors list.";
+      } else {
+        body.msg =
+          "Failed passport logout. Failed manual logout. See errors list.";
+      }
+      return res.json(body);
+    }
+
+    body.success = true;
+    body.msg = "Successful passport logout.";
+    return res.json(body);
   });
 });
 
