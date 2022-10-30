@@ -3,18 +3,18 @@ function Util() {
 
   // TODO -- show message function: success, neutral, error
 
-  // TODO -- not working
   util.redirect = function redirect(page) {
     window.location.replace(page + ".html");
   };
 
-  // TODO -- check
-  util.checkAuthenticated = async function checkAuthenticated(
+  util.checkAuthenticated = async function (
     redirectLocation,
     nextFunc,
     paramsForNext
   ) {
-    const res = await fetch("/getAuthentication", { method: "POST" });
+    const res = await (
+      await fetch("/getAuthentication", { method: "POST" })
+    ).json();
     if (res.authenticated) {
       nextFunc(paramsForNext);
     } else {
@@ -23,13 +23,14 @@ function Util() {
     }
   };
 
-  // TODO -- check
-  util.checkNotAuthenticated = async function checkAuthenticated(
+  util.checkNotAuthenticated = async function (
     redirectLocation,
     nextFunc,
     paramsForNext
   ) {
-    const res = await fetch("/getAuthentication", { method: "POST" });
+    const res = await (
+      await fetch("/getAuthentication", { method: "POST" })
+    ).json();
     if (!res.authenticated) {
       nextFunc(paramsForNext);
     } else {
