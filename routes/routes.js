@@ -2,6 +2,7 @@
 import express from "express";
 import passport from "passport";
 import { getUserById } from "../databaseConnect/userConnect.js";
+import deckConnect from "../databaseConnect/deckConnect.js";
 
 const router = express.Router();
 
@@ -109,5 +110,36 @@ router.post("/logoutUser", (req, res) => {
 });
 
 /** Armen */
+// router.get("/my-library", (req, res) => {
+//   if (req.session.passport.user) {
+//     res.json({success: true});
+//   }
+// });
+
+router.get("/get-user-deck-previews", async (req, res) => {
+  // const userId = req.session.passport.user;
+  const userId = "635db5ce21884bfba4a8c3ab";
+  const resObject = await deckConnect.getDecksInLibraryPreviews(userId);
+  console.log("the resObject: ", resObject);
+  console.log("the resObject type: ", typeof(resObject));
+  if (resObject.success) {
+    return res.json(resObject.userDeckPreviews);
+  }
+});
+
+router.post("/save-current-deck", (req, res) => {
+  const deckId = req.body;
+  req.session.manualData.currentDeck = deckId;
+  res.status();
+});
+
+//TESTAREA
+router.get("/showSessionDeck", (req, res) => {
+  res.json(req.session.manualData.currentDeck);
+  console.log("Sending: ", res.session.manualData.currentDeck);
+});
+
+
+//ENDTESTAREA
 
 export default router;
