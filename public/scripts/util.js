@@ -85,6 +85,12 @@ function Util() {
     return await (await fetch("/getCurrentDeck", { method: "POST" })).json();
   };
 
+  /** Sets the page's body to display */
+  util.displayPageBody = function () {
+    const body = document.querySelector("body");
+    body.style.display = "block";
+  };
+
   /** Armen */
 
   return util;

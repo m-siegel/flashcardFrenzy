@@ -13,6 +13,8 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   /* our style */
   box-sizing: border-box;
+  /* So unauthenticated users can't see page before redirect */
+  display: none;
 }
 
 a {
