@@ -35,6 +35,7 @@ function Util() {
 
   /**
    * Switches the window's location to the parameter page.html.
+   * From John's office hours.
    * @param {string} page   New location without .html extension.
    */
   util.redirect = function redirect(page) {
@@ -83,6 +84,8 @@ function Util() {
   util.getCurrentDeck = async function () {
     return await (await fetch("/getCurrentDeck", { method: "POST" })).json();
   };
+
+  /** Armen */
 
   return util;
 }
