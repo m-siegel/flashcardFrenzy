@@ -3,6 +3,15 @@
   background-color: #3563D8;
 }
 
+.offcanvas-parent {
+  position: relative;
+  overflow: hidden;
+}
+.offcanvas {
+  position: absolute;
+}
+
+
 
 /*If all page headers will be the same, move this to style.css and just style the h1 element instead of creating a class*/
 .pageHeader {
@@ -28,6 +37,7 @@ body {
 
 .deckIcon {
   width: 150px;
+  min-width: 150px;
   height: 200px;
   border: 1px solid #FF9900;
   border-radius: 30px;

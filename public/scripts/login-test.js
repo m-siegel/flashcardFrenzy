@@ -1,4 +1,5 @@
 import util from "./util.js";
+// import iconGenerator from "./deck-grid.js";
 
 function LoginTest() {
   const loginTest = {};
@@ -26,7 +27,7 @@ function LoginTest() {
             if (res.ok) {
               res = await res.json();
               if (res.success) {
-                util.redirect("/logged-in-demo");
+                util.redirect("/my-library");
               } else {
                 util.addAlert(msgSpot, "warning", res.msg, "Login Failed");
               }
@@ -35,6 +36,13 @@ function LoginTest() {
             util.addAlert(msgSpot, "danger", err, "ERROR:");
           }
         });
+        //iconGenerator.generateDeckIcon("Armen", "Spanish", "Verbs");
+        // const userId = await util.getUserId().user;
+        // const userDeckPreviews = await deckConnect.getDecksInLibraryPreviews("635db5ce21884bfba4a8c3ab");
+        // for (let deck in userDeckPreviews) {
+        //   console.log("Deck object: ", deck);
+        //   iconGenerator.generateDeckIcon(deck.author, deck.name, deck.deck_tags);
+        // }
       },
 
       null
