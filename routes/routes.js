@@ -224,6 +224,190 @@ router.get("/get-decks-in-user-library", async (req, res) => {
   return res.json(dbResponse);
 });
 
+router.post("/toggle-deck-privacy", async (req, res) => {
+  const deckId = req.body.deckId;
+  if (!deckId) {
+    return res.json({
+      success: false,
+      msg: "Cannot update deck without deckId",
+      err: null,
+    });
+  }
+  let dbResponse = await deckConnect.updateDeckPrivacy(deckId);
+  if (!dbResponse) {
+    return res.json({
+      success: false,
+      msg: "Database error. No response from database.",
+      err: new Error("No response from database"),
+    });
+  }
+  return res.json({
+    success: dbResponse.success,
+    msg: dbResponse.msg,
+    err: dbResponse.err,
+  });
+});
+
+router.post("/update-deck-name", async (req, res) => {
+  const deckId = req.body.deckId;
+  const newName = req.body.newName;
+  if (!deckId) {
+    return res.json({
+      success: false,
+      msg: "Cannot update deck without deckId",
+      err: null,
+    });
+  }
+  if (!newName) {
+    return res.json({
+      success: false,
+      msg: "Cannot update deck without new name",
+      err: null,
+    });
+  }
+  let dbResponse = await deckConnect.updateDeckName(deckId, newName);
+  if (!dbResponse) {
+    return res.json({
+      success: false,
+      msg: "Database error. No response from database.",
+      err: new Error("No response from database"),
+    });
+  }
+  return res.json({
+    success: dbResponse.success,
+    msg: dbResponse.msg,
+    err: dbResponse.err,
+  });
+});
+
+router.post("/add-card-to-deck", async (req, res) => {
+  const deckId = req.body.deckId;
+  const card = req.body.card;
+  if (!deckId) {
+    return res.json({
+      success: false,
+      msg: "Cannot add card to deck without deckId",
+      err: null,
+    });
+  }
+  if (!card) {
+    return res.json({
+      success: false,
+      msg: "Cannot add card to deck deck without card",
+      err: null,
+    });
+  }
+  let dbResponse = await deckConnect.addCardToDeck(deckId, card);
+  if (!dbResponse) {
+    return res.json({
+      success: false,
+      msg: "Database error. No response from database.",
+      err: new Error("No response from database"),
+    });
+  }
+  return res.json({
+    success: dbResponse.success,
+    msg: dbResponse.msg,
+    err: dbResponse.err,
+  });
+});
+
+router.post("/remove-card-from-deck", async (req, res) => {
+  const deckId = req.body.deckId;
+  const cardId = req.body.cardId;
+  if (!deckId) {
+    return res.json({
+      success: false,
+      msg: "Cannot remove card from deck without deckId",
+      err: null,
+    });
+  }
+  if (!cardId) {
+    return res.json({
+      success: false,
+      msg: "Cannot remove card from deck without card id",
+      err: null,
+    });
+  }
+  let dbResponse = await deckConnect.removeCardFromDeck(deckId, cardId);
+  if (!dbResponse) {
+    return res.json({
+      success: false,
+      msg: "Database error. No response from database.",
+      err: new Error("No response from database"),
+    });
+  }
+  return res.json({
+    success: dbResponse.success,
+    msg: dbResponse.msg,
+    err: dbResponse.err,
+  });
+});
+
+router.post("/update-deck-tags", async (req, res) => {
+  const deckId = req.body.deckId;
+  const tagsArray = req.body.tagsArray;
+  if (!deckId) {
+    return res.json({
+      success: false,
+      msg: "Cannot update deck tags without deckId",
+      err: null,
+    });
+  }
+  if (!tagsArray) {
+    return res.json({
+      success: false,
+      msg: "Cannot update deck tags without tag array",
+      err: null,
+    });
+  }
+  let dbResponse = await deckConnect.updateDeckTags(deckId, tagsArray);
+  if (!dbResponse) {
+    return res.json({
+      success: false,
+      msg: "Database error. No response from database.",
+      err: new Error("No response from database"),
+    });
+  }
+  return res.json({
+    success: dbResponse.success,
+    msg: dbResponse.msg,
+    err: dbResponse.err,
+  });
+});
+
+router.post("/update-deck-author", async (req, res) => {
+  const deckId = req.body.deckId;
+  const authorUsername = req.body.authorUsername;
+  if (!deckId) {
+    return res.json({
+      success: false,
+      msg: "Cannot update deck author without deckId",
+      err: null,
+    });
+  }
+  if (!authorUsername) {
+    return res.json({
+      success: false,
+      msg: "Cannot update deck author without new name",
+      err: null,
+    });
+  }
+  let dbResponse = await deckConnect.updateDeckAuthor(deckId, authorUsername);
+  if (!dbResponse) {
+    return res.json({
+      success: false,
+      msg: "Database error. No response from database.",
+      err: new Error("No response from database"),
+    });
+  }
+  return res.json({
+    success: dbResponse.success,
+    msg: dbResponse.msg,
+    err: dbResponse.err,
+  });
+});
+
 /** Armen */
 
 router.get("/get-user-deck-previews", async (req, res) => {
