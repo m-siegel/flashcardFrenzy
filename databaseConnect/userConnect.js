@@ -217,7 +217,7 @@ userConnect.updateDecks = updateDecks;
  *                       deck: the parameter deckId
  *                       err: null or the error that was caught}
  */
-export async function insertDeck(idString, deckId) {
+export async function addDeckToLibrary(idString, deckId) {
   const id = new mongodb.ObjectId(idString);
   const uri = process.env.DB_URI || "mongodb://localhost:27017";
   const client = new mongodb.MongoClient(uri);
@@ -239,7 +239,7 @@ export async function insertDeck(idString, deckId) {
       };
     }
     return {
-      success: true,
+      success: false,
       msg: "Could not insert deck into user's library",
       deckId: deckId,
       err: null,
@@ -256,7 +256,107 @@ export async function insertDeck(idString, deckId) {
     await client.close();
   }
 }
-userConnect.insertDeck = insertDeck;
+userConnect.addDeckToLibrary = addDeckToLibrary;
+
+/**
+ * Removes the parameter deckId into the user's decks_in_library array.
+ * @param {string} idString    String version of user's _id mongodb.ObjectId in the MongoDB Users collection.
+ * @param {string} deckId   String version of deck's _id mongodb.ObjectId in the MongoDB Decks collection.
+ * @returns {object}    {success: boolean,
+ *                       msg: string explaining success status,
+ *                       deck: the parameter deckId
+ *                       err: null or the error that was caught}
+ */
+export async function removeDeckFromLibrary(idString, deckId) {
+  const id = new mongodb.ObjectId(idString);
+  const uri = process.env.DB_URI || "mongodb://localhost:27017";
+  const client = new mongodb.MongoClient(uri);
+
+  try {
+    await client.connect();
+    const mainDatabase = client.db(databaseName);
+    const usersCollection = mainDatabase.collection(collectionName);
+    const res = await usersCollection.updateOne(
+      { _id: id },
+      { $pull: { decks_in_library: deckId } }
+    );
+    if (res.acknowledged && res.matchedCount) {
+      return {
+        success: true,
+        msg: "Removed deck from user's library",
+        deckId: deckId,
+        err: null,
+      };
+    }
+    return {
+      success: false,
+      msg: "Could not remove deck from user's library",
+      deckId: deckId,
+      err: null,
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      msg: "Error removing deck from user's library",
+      deckId: deckId,
+      err: e,
+    };
+  } finally {
+    await client.close();
+  }
+}
+userConnect.removeDeckFromLibrary = removeDeckFromLibrary;
+
+/**
+ * Pushes the parameter deckId into the user's decks_created array.
+ * @param {string} idString    String version of user's _id mongodb.ObjectId in the MongoDB Users collection.
+ * @param {string} deckId   String version of deck's _id mongodb.ObjectId in the MongoDB Decks collection.
+ * @returns {object}    {success: boolean,
+ *                       msg: string explaining success status,
+ *                       deck: the parameter deckId
+ *                       err: null or the error that was caught}
+ */
+export async function addDeckCreated(idString, deckId) {
+  const id = new mongodb.ObjectId(idString);
+  const uri = process.env.DB_URI || "mongodb://localhost:27017";
+  const client = new mongodb.MongoClient(uri);
+
+  try {
+    await client.connect();
+    const mainDatabase = client.db(databaseName);
+    const usersCollection = mainDatabase.collection(collectionName);
+    const res = await usersCollection.updateOne(
+      { _id: id },
+      { $push: { decks_created: deckId } }
+    );
+    if (res.acknowledged && res.matchedCount) {
+      return {
+        success: true,
+        msg: "Inserted deck into user's list of decks created",
+        deckId: deckId,
+        err: null,
+      };
+    }
+    return {
+      success: false,
+      msg: "Could not insert deck into user's list of decks created",
+      deckId: deckId,
+      err: null,
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      msg: "Error inserting deck into user's list of decks created",
+      deckId: deckId,
+      err: e,
+    };
+  } finally {
+    await client.close();
+  }
+}
+userConnect.addDeckCreated = addDeckCreated;
 
 /**
  * Sets the user's username list to the parameter username if the parameter username is available.
