@@ -216,33 +216,38 @@ router.post("/add-deck-to-created", async (req, res) => {
 
 router.get("/get-user-deck-previews", async (req, res) => {
   const userId = req.session.passport.user;
-  //const userId = "635db5ce21884bfba4a8c3ab";
   const resObject = await deckConnect.getDecksInLibraryPreviews(userId);
-  console.log("the resObject: ", resObject);
-  console.log("the resObject type: ", typeof resObject);
   if (resObject.success) {
     return res.json(resObject.userDeckPreviews);
+  } else {
+    return res.json({success:false, err: resObject.err});
   }
 });
 
 router.post("/set-current-deck", (req, res) => {
   const deckId = req.body.currentDeckId;
-  console.log("req.body.currentDeckId: ", deckId);
-  req.session.manualData.currentDeck = deckId;
-  res.json({
-    success: true,
-    currentDeckId: req.session.manualData.currentDeck,
-  });
+  if (deckId) {
+    req.session.manualData.currentDeck = deckId;
+    return res.json({
+      success: true,
+      currentDeckId: req.session.manualData.currentDeck,
+    });
+  } else {
+    return res.json({success:false});
+  }
+
 });
 
 
 router.post("/delete-user-from-deck", async (req, res) => {
-  await deckConnect.deleteDeck(
+  const responseObj = await deckConnect.deleteDeck(
     req.session.manualData.currentDeck,
     req.session.passport.user
   );
-
-  res.json({ success: false });
+  if (!responseObj.success) {
+    return res.json({success: false, err: responseObj.err});
+  }
+  return res.json({ success: true });
 });
 
 /**
@@ -286,8 +291,10 @@ router.post("/duplicate-deck", async (req, res) => {
   const resObject = await deckConnect.getDeckById(
     req.session.manualData.currentDeck
   );
+  if (! resObject.success) {
+    return res.json({success: false, error: resObject.err});
+  }
   const deckToCopy = resObject.deck;
-
   delete deckToCopy._id; //So mongodb will generate a new id
   deckToCopy.active_users.push(req.session.passport.user);
   const currentDate = new Date();
@@ -296,37 +303,37 @@ router.post("/duplicate-deck", async (req, res) => {
   const copiedDeck = await deckConnect.getDeckByDateCreated(currentDate);
   await addDeckToLibrary(req.session.passport.user, copiedDeck._id);
   await addDeckCreated(req.session.passport.user, copiedDeck._id);
-  res.json({ success: true, duplicateDeck: copiedDeck });
+  return res.json({ success: true, duplicateDeck: copiedDeck });
 });
 
 router.get("/get-deck-by-id", async (req, res) => {
   const deckRes = await deckConnect.getDeckById(req.body.deckId);
   if (! deckRes.success) {
-    res.json({success:false, err: deckRes.err});
+    return res.json({success:false, err: deckRes.err});
   }
-  res.json({ success: true, deck: deckRes.deck });
+  return res.json({ success: true, deck: deckRes.deck });
 });
 
 router.get("/create-deck", async (req, res) => {
   const deckRes = await deckConnect.createDeck(req.session.passport.user);
   if (! deckRes.success) {
-    res.json({success: false, err: deckRes.err});
+    return res.json({success: false, err: deckRes.err});
   }
   const deckObj = deckRes.deck;
   const id = deckObj._id.toString();
   await addDeckToLibrary(id);
   await addDeckCreated(req.session.passport.user, id);
-  res.json({ success: true, deck: deckObj });
+  return res.json({ success: true, deck: deckObj });
 });
 
 router.post("/get-cards-in-deck", async (req, res) => {
   const deckRes = await deckConnect.getDeckById(req.body.deckId);
   if (!deckRes.success) {
-    res.json({success:false, err: deckRes.err});
+    return res.json({success:false, err: deckRes.err});
   }
 
   const flashcardArray = deckRes.deck.flashcards;
-  res.json({success:true, flashcards: flashcardArray});
+  return res.json({success:true, flashcards: flashcardArray});
 });
 
 router.post("/check-answer", (req, res) => {
@@ -334,9 +341,9 @@ router.post("/check-answer", (req, res) => {
   const correctAnswers = req.body.correctAnswers;
 
   if (correctAnswers.includes(resString) || correctAnswers.includes(resString.toLowerCase())) {
-    res.json({success: true});
+    return res.json({success: true});
   } else {
-    res.json({success:false});
+    return res.json({success:false});
   }
 
 

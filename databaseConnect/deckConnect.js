@@ -50,9 +50,7 @@ function DeckConnect() {
       // await mainDatabase.collection(userCollection)
       //   .updateOne({_id: userIdObj}, {$pull: {decks_in_library: deckId}});
       const deckObj = await mainDatabase.collection(deckCollection).findOne({"_id": deckIdObj});
-      //using .aggregate and $size, get an object which has the length of deck's active_users array
-      //https://www.tutorialspoint.com/count-the-number-of-items-in-an-array-in-mongodb
-      //const getLength = await mainDatabase.collection(deckCollection).aggregate({$project:{"array_length":{$size: "active_users"}}});
+    
       //if no other active users, then safely delete it from the database
       if (deckObj.active_users.length === 0) {
         await mainDatabase.collection(deckCollection).deleteOne({_id:deckIdObj});
