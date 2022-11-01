@@ -13,6 +13,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="./stylesheets/main.css" />
+    <link rel="stylesheet" href="./stylesheets/user-settings.css" />
     <title>User Settings</title>
   </head>
   <body>
@@ -101,15 +102,45 @@
         <main class="col col-md-9 col-lg-10 col-xxl-11" id="main-content">
           <!-- For Alerts -->
           <div id="messageSpot"></div>
-
           <div class="row">
+            <div class="col-auto">
+              <form class="row row-cols-lg-auto g-3 align-items-center" id="submitUsernameForm" name="submitUsernameForm">
+                <div class="col-12">
+                  <label
+                    class="visually-hidden"
+                    for="inlineFormInputGroupUsername"
+                    >Username</label
+                  >
+                  <div class="input-group">
+                    <div class="input-group-text">Change username</div>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="inlineFormInputGroupUsername"
+                      name="submitUsernameForm"
+                      placeholder="New Username"
+                      required
+                    />
+                  </div>
+                </div>
+                <br><br><br><br>
+                <div class="col-12">
+                  <button type="submit" id="submitUsernameButton" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+              </div>
+          <div class="card">
+            <div class="card-header">
+              Remove account
+            </div>
+          <div class="card-body">
+              <h5 class="card-title">Do you want to delete your account?</h5>
+                <p class="card-text">Please click submit only if you are sure - this will permanently delete your account and you will no longer be able to access your decks!</p>
+                <a href="/index" class="btn btn-danger" id="deleteButton">Delete Account</a>
           </div>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum
-            aspernatur, hic dignissimos voluptas veritatis vel non repudiandae
-            odio aliquam voluptatem dolorum similique ut veniam, ad in quidem
-            sequi, culpa provident.
-          </p>
+        </div>
+            </div>
+          </div>
         </main>
       </div>
     </div>
@@ -120,9 +151,12 @@
       crossorigin="anonymous"
     ></script>
     <script type="module">
-      import loggedInDemo from "./scripts/logged-in-demo.js";
-      loggedInDemo.setUpPage();
-      //loggedInDemo.renderPage();
+      import util from "./scripts/util.js";
+      import userSettings from "./scripts/user-settings-frontend.js";
+      util.setUpPage();
+      util.renderPage();
+      userSettings.configureFormSubmit();
+      userSettings.setDeleteEvent();
     </script>
   </body>
 </html>
