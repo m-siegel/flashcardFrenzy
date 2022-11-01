@@ -39,3 +39,7 @@ At the moment, this site may only be used locally using git clone.
 3. To create a database, install mongodb locally and run the local server in the background. It should be set up to run on localhost:27017.
 4. In the terminal, navigate to your cloned repository and run the command 'npm start'. This will start the server.
 5. In the web browser of your choice, go to [http://localhost:3000/](http://localhost:3000/)
+
+## For a look into our design process, check out
+- [Our early visual design documents](https://drive.google.com/file/d/1HmAm91xn3q6zwJUTtpU_qo1F2rrK3mAL/view?usp=sharing)
+- [Our brainstorming of the organization of modules, routes and functions](https://drive.google.com/file/d/1pVqPjIFLGXW6LBXxO3TMZGAiOlnAKDpG/view?usp=sharing)
