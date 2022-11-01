@@ -314,11 +314,19 @@ router.post("/duplicate-deck", async (req, res) => {
 
 router.get("/get-deck-by-id", async (req, res) => {
   const deckRes = await deckConnect.getDeckById(req.body.deckId);
-  res.json({ success: true, deck: deckRes });
+  if (! deckRes.success) {
+    res.json({success:false, err: deckRes.err});
+  }
+  res.json({ success: true, deck: deckRes.deck });
 });
 
-router.post("/create-deck", async (req, res) => {
-  res.json({ success: true, deck: 5 });
+router.get("/create-deck", async (req, res) => {
+  const deckRes = await deckConnect.createDeck(req.session.passport.user);
+  if (! deckRes.success) {
+    res.json({success: false, err: deckRes.err});
+  }
+  const deckObj = deckRes.deck;
+  res.json({ success: true, deck: deckObj });
 });
 
 //add deck to library - expect req to have json with deckID and userID

@@ -1,0 +1,9 @@
+.card.mb-3 {
+  max-width: 540px;
+  color: blue;
+}
+
+.cardDisplay {
+  margin-left: 200px;
+  margin-right: 200px;
+}
