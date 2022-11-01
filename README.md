@@ -1,6 +1,6 @@
 # Flashcard Frenzy
 
-**Author:** [Armen Sarkisian](https://github.com/arm2349) and [Ilana-Mahmea Siegel](https://github.com/m-siegel/)
+**Authors:** [Armen Sarkisian](https://github.com/arm2349) and [Ilana-Mahmea Siegel](https://github.com/m-siegel/)
 
 This is a flashcard creation and study website created with MongoDB, Node.js, Express.js, HTML, CSS and Javascript.
 Users can register and log in to create and edit their own flashcard decks, check out other users' public decks, which they can add to their library, and study any decks in their library.
