@@ -1,7 +1,7 @@
 /* Ilana-Mahmea */
 import express from "express";
 import passport from "passport";
-import { getUserById } from "../databaseConnect/userConnect.js";
+import userConnect, { getUserById } from "../databaseConnect/userConnect.js";
 import { availableUsername, createAndAddUser } from "../util/user-util.js";
 import deckConnect from "../databaseConnect/deckConnect.js";
 
@@ -23,12 +23,12 @@ router.post(
 );
 
 router.get("/loginFailed", (req, res) => {
-  req.session.manualData = { username: "" };
+  req.session.manualData = { username: "", currentDeck: "" };
   res.json({ success: false, msg: "Invalid username or password." });
 });
 
 router.get("/loginSucceeded", async (req, res) => {
-  req.session.manualData = { username: "" };
+  req.session.manualData = { username: "", currentDeck: "" };
   const dbResponse = await getUserById(req.session.passport.user);
   if (dbResponse.success) {
     req.session.manualData.username = dbResponse.user.username;
@@ -42,6 +42,10 @@ router.post("/getUsername", (req, res) => {
 
 router.post("/getUserId", (req, res) => {
   res.json({ user: req.session.passport.user });
+});
+
+router.post("/getCurrentDeck", (req, res) => {
+  res.json({ currentDeck: req.session.manualData.currentDeck });
 });
 
 router.post("/registerUser", async (req, res) => {
@@ -115,6 +119,115 @@ router.post("/logoutUser", (req, res) => {
     body.success = true;
     body.msg = "Successful passport logout.";
     return res.json(body);
+  });
+});
+
+/**
+ * Expects json body with attributes deckId and userId.
+ */
+router.post("/remove-deck-from-library", async (req, res) => {
+  const deckId = req.body.deckId;
+  const userId = req.body.userId;
+  if (!deckId) {
+    return res.json({
+      success: false,
+      msg: "Cannot remove deck without deckId",
+      err: null,
+    });
+  }
+  if (!userId) {
+    return res.json({
+      success: false,
+      msg: "Cannot remove deck without userId",
+      err: null,
+    });
+  }
+
+  let dbResponse = await userConnect.removeDeckFromLibrary(userId, deckId);
+  if (!dbResponse) {
+    return res.json({
+      success: false,
+      msg: "Database error. No response from database.",
+      err: new Error("No response from database"),
+    });
+  }
+  dbResponse = await dbResponse.json();
+  return res.json({
+    success: dbResponse.success,
+    msg: dbResponse.msg,
+    err: dbResponse.err,
+  });
+});
+
+/**
+ * Expects json body with attributes deckId and userId.
+ */
+router.post("/add-deck-to-library", async (req, res) => {
+  const deckId = req.body.deckId;
+  const userId = req.body.userId;
+  if (!deckId) {
+    return res.json({
+      success: false,
+      msg: "Cannot add deck without deckId",
+      err: null,
+    });
+  }
+  if (!userId) {
+    return res.json({
+      success: false,
+      msg: "Cannot add deck without userId",
+      err: null,
+    });
+  }
+  let dbResponse = await userConnect.addDeckToLibrary(userId, deckId);
+  if (!dbResponse) {
+    return res.json({
+      success: false,
+      msg: "Database error. No response from database.",
+      err: new Error("No response from database"),
+    });
+  }
+  dbResponse = await dbResponse.json();
+  return res.json({
+    success: dbResponse.success,
+    msg: dbResponse.msg,
+    err: dbResponse.err,
+  });
+});
+
+/**
+ * Expects json body with attributes deckId and userId.
+ */
+router.post("/add-deck-to-created", async (req, res) => {
+  const deckId = req.body.deckId;
+  const userId = req.body.userId;
+  if (!deckId) {
+    return res.json({
+      success: false,
+      msg: "Cannot add deck without deckId",
+      err: null,
+    });
+  }
+  if (!userId) {
+    return res.json({
+      success: false,
+      msg: "Cannot add deck without userId",
+      err: null,
+    });
+  }
+  let dbResponse = await userConnect.addDeckCreated(userId, deckId);
+  if (!dbResponse) {
+    return res.json({
+      success: false,
+      msg: "Database error. No response from database.",
+      err: new Error("No response from database"),
+    });
+  }
+  dbResponse = await dbResponse.json();
+  return res.json({
+    success: dbResponse.success,
+    msg: dbResponse.msg,
+    err: dbResponse.err,
   });
 });
 
