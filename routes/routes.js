@@ -144,7 +144,6 @@ router.post("/remove-deck-from-library", async (req, res) => {
       err: new Error("No response from database"),
     });
   }
-  dbResponse = await dbResponse.json();
   return res.json({
     success: dbResponse.success,
     msg: dbResponse.msg,
@@ -173,7 +172,6 @@ router.post("/add-deck-to-library", async (req, res) => {
       err: new Error("No response from database"),
     });
   }
-  dbResponse = await dbResponse.json();
   return res.json({
     success: dbResponse.success,
     msg: dbResponse.msg,
@@ -202,7 +200,6 @@ router.post("/add-deck-to-created", async (req, res) => {
       err: new Error("No response from database"),
     });
   }
-  dbResponse = await dbResponse.json();
   return res.json({
     success: dbResponse.success,
     msg: dbResponse.msg,
