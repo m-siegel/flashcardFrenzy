@@ -299,6 +299,12 @@ function EditDeck() {
             dbNameRes = await dbNameRes.json();
             if (dbNameRes.success) {
               editDeck.deck.name = editDeck.form.nameElement.value;
+              util.addAlert(
+                editDeck.messageSpotElement,
+                "success",
+                "",
+                "Saved name"
+              );
             } else {
               util.addAlert(
                 editDeck.messageSpotElement,
@@ -351,6 +357,12 @@ function EditDeck() {
             dbPublicRes = await dbPublicRes.json();
             if (dbPublicRes.success) {
               editDeck.deck.public = !editDeck.deck.public;
+              util.addAlert(
+                editDeck.messageSpotElement,
+                "success",
+                "",
+                "Saved visibility"
+              );
             } else {
               util.addAlert(
                 editDeck.messageSpotElement,
@@ -391,6 +403,12 @@ function EditDeck() {
           dbTagsRes = await dbTagsRes.json();
           if (dbTagsRes.success) {
             editDeck.deck.deck_tags = editDeck.form.tagsListValues.slice(); // copy
+            util.addAlert(
+              editDeck.messageSpotElement,
+              "success",
+              "",
+              "Saved tags"
+            );
           } else {
             util.addAlert(
               editDeck.messageSpotElement,
@@ -507,6 +525,12 @@ function EditDeck() {
           console.log(dbCardsRes);
           if (dbCardsRes.success) {
             editDeck.deck.flashcards = editDeck.cardsList.slice(); // copy
+            util.addAlert(
+              editDeck.messageSpotElement,
+              "success",
+              "",
+              "Saved cards"
+            );
           } else {
             util.addAlert(
               editDeck.messageSpotElement,
@@ -598,6 +622,12 @@ function EditDeck() {
                 editDeck.getCardListItem(card)
               );
               editDeck.clearModalForm();
+              util.addAlert(
+                editDeck.messageSpotElement,
+                "success",
+                "",
+                "Added card"
+              );
               return;
             } else {
               editDeck.cardsList = editDeck.deck.flashcards.slice();
