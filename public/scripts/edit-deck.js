@@ -53,6 +53,7 @@ function EditDeck() {
       editDeck.fillDeckFormFromDeck();
       editDeck.setUpEditDeckForm();
       editDeck.setUpTabListeners();
+      editDeck.setUpCardsListButtons();
     }
   };
 
@@ -464,6 +465,7 @@ function EditDeck() {
         });
         if (dbCardsRes.ok) {
           dbCardsRes = await dbCardsRes.json();
+          console.log(dbCardsRes);
           if (dbCardsRes.success) {
             editDeck.deck.flashcards = editDeck.cardsList.slice(); // copy
           } else {
