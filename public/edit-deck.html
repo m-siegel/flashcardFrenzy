@@ -13,6 +13,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="./stylesheets/main.css" />
+    <link rel="stylesheet" href="./stylesheets/edit-deck.css" />
     <title>Edit Deck</title>
   </head>
   <body>
@@ -173,99 +174,49 @@
                 <section class="row p-3">
                   <h3>Deck Settings</h3>
                   <form action="">
-                    <div class="row g-3 mt-1 mb-1 align-items-center">
+                    <div class="row g-3 mt-1 mb-1">
+                      <!-- deck name input -->
                       <div class="col-12 col-md-6">
-                        <input type="text" class="form-control" placeholder="Deck Name" aria-label="Deck name">
+                        <label class="form-label" for="name">Deck Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="Deck Name" aria-label="Deck name">
                       </div>
-                      <div class="col-12 col-md-6">
-                        <input type="text" class="form-control" placeholder="Visibility" aria-label="Deck visibility">
+                      <!-- visibility input -->
+                      <div class="col-12 col-md-6 px-5">
+                        <label class="form-label" for="visibility-radios">Visibility</label>
+                        <div id="visibility-radios">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="visibility" id="visibility-public">
+                            <label class="form-check-label" for="visibility-public">
+                              Public
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="visibility" id="visibility-private">
+                            <label class="form-check-label" for="visibility-private">
+                              Private
+                            </label>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-                    <div class="row g-3 mt-1 mb-1 align-items-center">
+                    <div class="row g-3 mt-1 mb-1">
+                      <!-- deck tags input -->
                       <div class="col-auto">
-                        <label for="deckTags" class="col-form-label">Deck Tags</label>
-                      </div>
-                      <div class="col-auto">
+                        <label class="form-label" for="visibility-radios" for="deckTags">Deck Tags</label>
                         <input type="text" id="deckTags" class="form-control" aria-describedby="tagsList">
                       </div>
                       <div class="col-auto">
                         <span id="tagsList" class="form-text">
-                          <ul class="list-horizontal">
-                            <li class="list-group-item list-group-item-action">Tag 1<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></li>
-                            <li class="list-group-item list-group-item-action">Tag 2</li>
-                            <li class="list-group-item list-group-item-action">Tag 3</li>
-                            <li class="list-group-item list-group-item-action">etc.</li>
-                            <li class="list-group-item list-group-item-action">Tag 2</li>
-                            <li class="list-group-item list-group-item-action">Tag 3</li>
-                            <li class="list-group-item list-group-item-action">etc.</li>
-                            <li class="list-group-item list-group-item-action">Tag 2</li>
-                            <li class="list-group-item list-group-item-action">Tag 3</li>
-                            <li class="list-group-item list-group-item-action">etc.</li>
+                          <ul class="list-group">
+                            <li class="list-group-item list-group-item-action">Tag 1 <button type="button" class="btn-close" aria-label="Close"></button></li>
                           </ul>
                         </span>
                       </div>
                     </div>
-                    <div class="row g-3 mt-1 mb-1 align-items-center">
-                      <h5>Advanced Settings</h5>
-                    </div>
-                    
-                    <div class="row g-3 mt-1 mb-1 align-items-center">
-                      <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="showSuccessRateSwitch">
-                        <label class="form-check-label" for="showSuccessRateSwitch">Show success rate</label>
-                      </div>
-                      <fieldset disabled>
-                        <div class="mb-3">
-                          <div class="col-auto">
-                            <span class="form-label">
-                              Base success rate on: 
-                            </span>
-                          <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="successIndicatorBasedOn" id="succIndlastAnswer" value="lastAnswer">
-                            <label class="form-check-label" for="succIndlastAnswer">Last answer</label>
-                          </div>
-                          <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="successIndicatorBasedOn" id="succIndoverallRate" value="overallRate">
-                            <label class="form-check-label" for="succIndoverallRate">Overall rate</label>
-                          </div>
-                        </div>
-                        <div class="mb-3">
-                          <div class="col-auto">
-                            <span class="form-label">
-                              Show as: 
-                            </span>
-                          <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="successIndicatorShowAs" id="succIndBorder" value="border">
-                            <label class="form-check-label" for="succIndBorder">Last Answer</label>
-                          </div>
-                          <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="successIndicatorShowAs" id="succIndIcon" value="icon">
-                            <label class="form-check-label" for="succIndIcon">Overall Rate</label>
-                          </div>
-                        </div>
-                        <div class="row g-3 mt-1 mb-1 align-items-center">
-                          <fieldset disabled>
-                            <div>
-                              <label class="form-label" for="succIndBorderColorPicker">Border Color</label>
-                              <input type="color" id="succIndBorderColorPicker" name="succIndBorderColor"
-                                     value="#e66465">
-                          </div>
-                            </fieldset>
-                            <fieldset disabled>
-                              <label for="succIndIconPicker" class="form-label">Select Icon Set</label>
-                              <select class="form-select" aria-label="Select icon" id="succIndIconPicker">
-                                <option selected>None</option>
-                                <option value="1">Icons 1</option>
-                                <option value="2">Icons 2</option>
-                                <option value="3">Icons 3</option>
-                              </select>
-                            </fieldset>
-                            </div>
-                      </fieldset>
-                    </div>
+
                     <!-- we'll want to suppress default when handling so the page doesn't reload -->
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary mt-3">Save</button>
                   </form>
                 </section>
               </div>
