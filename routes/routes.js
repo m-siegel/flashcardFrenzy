@@ -224,6 +224,18 @@ router.get("/get-user-deck-previews", async (req, res) => {
   }
 });
 
+router.get("/get-public-deck-previews", async (req, res) => {
+  const resObject = await deckConnect.getPublicDeckPreviews();
+  if (resObject.success) {
+    return res.json(resObject.publicDeckPreviews);
+  } else {
+    return res.json({success:false, err: resObject.err});
+  }
+});
+
+
+
+
 router.post("/set-current-deck", (req, res) => {
   const deckId = req.body.currentDeckId;
   if (deckId) {
@@ -248,6 +260,13 @@ router.post("/delete-user-from-deck", async (req, res) => {
     return res.json({success: false, err: responseObj.err});
   }
   return res.json({ success: true });
+});
+
+router.post("/add-user-to-deck", async (req, res) => {
+  const userId = req.session.passport.user;
+  const deckId = req.body.deckId;
+  const resObject = await deckConnect.addUserToDeck(deckId, userId);
+  return res.json(resObject);
 });
 
 /**
@@ -278,7 +297,7 @@ router.post("/remove-deck-from-library", async (req, res) => {
       err: new Error("No response from database"),
     });
   }
-  //dbResponse = await dbResponse.json();
+
   return res.json({
     success: dbResponse.success,
     msg: dbResponse.msg,
@@ -367,6 +386,19 @@ router.post("/update-deck-flashcards", async (req, res) => {
   const resObject = await deckConnect.updateCardsList(deckId, flashcards);
   return res.json(resObject);
 });
+
+
+router.get("/get-current-deck-id", (req, res) => {
+  const deckId = req.session.manualData.currentDeck;
+  res.json({deck:deckId});
+
+});
+
+
+// router.post("/merge-decks", (req, res) => {
+
+
+// });
 
 
 export default router;

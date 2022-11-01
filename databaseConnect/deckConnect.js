@@ -532,6 +532,43 @@ function DeckConnect() {
 
   };
 
+  deckConnect.addUserToDeck = async function(deckId, userId) {
+    const uri = process.env.DB_URI || "mongodb://localhost:27017";
+    const client = new mongodb.MongoClient(uri);
+    const deckIdObj = new mongodb.ObjectId(deckId);
+    try {
+      await client.connect();
+      const mainDatabase = await client.db("MainDatabase");
+      await mainDatabase.collection(deckCollection)
+        .updateOne({_id: deckIdObj}, {$push: {active_users: userId}});
+      return {success: true, msg: "Successfully added user to deck"};
+    } catch (e) {
+      console.error(e);
+      return {success: false, msg: "Failed to add user to deck", err: e};
+    } finally {
+      await client.close();
+    }
+
+  };
+
+  deckConnect.createMergedDeck = async function(deckId1, deckId2, userId) {
+    const uri = process.env.DB_URI || "mongodb://localhost:27017";
+    const client = new mongodb.MongoClient(uri);
+    const deckIdObj1 = new mongodb.ObjectId(deckId1);
+    const deckIdObj2 = new mongodb.ObjectId(deckId2);
+    const userIdObj = new mongodb.ObjectId(userId);
+    try {
+      await client.connect();
+      const mainDatabase = await client.db("MainDatabase");
+
+    } catch (e) {
+      console.error(e);
+    } finally {
+      await client.close();
+    }
+
+  };
+
 
 
   return deckConnect;
