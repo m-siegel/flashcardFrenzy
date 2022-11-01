@@ -47,7 +47,7 @@ At the moment, this site may only be used locally using git clone.
 ## A Peek into our Site
 ![Register](https://drive.google.com/file/d/10S2JrGXFAgvX6ubG9MJ7i0HYk7dNqw8B/view?usp=sharing)
 ![Login](https://drive.google.com/file/d/1VGDco4a9tymfnc6-QCfyqca8zay8Phea/view?usp=sharing)
-![Eplore public decks](https://drive.google.com/file/d/1wherbgg1P3ds2MOxEfo2ivnxT86YZrjN/view?usp=sharing)
+![Explore public decks](https://github.com/m-siegel/flashcardFrenzy/blob/ce4669850962c20c295c6a63168d0b963ef51e98/explore.png)
 ![Study the decks in your library](https://drive.google.com/file/d/19NrGRcHiA-K0q9i16fl9PTZALbzlUJHy/view?usp=sharing)
 ![Edit your decks](https://drive.google.com/file/d/1G8llESLwPm11EXU1niTi9xkJo8G7pQnn/view?usp=sharing)
 ![Study a deck](https://drive.google.com/file/d/12qOvYUEvlTV_Uarg4oWm3TzwD0XARWir/view?usp=sharing)
