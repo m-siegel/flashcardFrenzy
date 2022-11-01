@@ -5,6 +5,7 @@ import userConnect, {
   getUserById,
   addDeckToLibrary,
   removeDeckFromLibrary,
+  addDeckCreated
 } from "../databaseConnect/userConnect.js";
 import { availableUsername, createAndAddUser } from "../util/user-util.js";
 import deckConnect from "../databaseConnect/deckConnect.js";
@@ -308,7 +309,8 @@ router.post("/duplicate-deck", async (req, res) => {
   deckToCopy.date_created = currentDate;
   await deckConnect.addDeckToDb(deckToCopy);
   const copiedDeck = await deckConnect.getDeckByDateCreated(currentDate);
-  await addDeckToLibrary(copiedDeck._id);
+  await addDeckToLibrary(req.session.passport.user, copiedDeck._id);
+  await addDeckCreated(req.session.passport.user, copiedDeck._id);
   res.json({ success: true, duplicateDeck: copiedDeck });
 });
 
@@ -326,8 +328,36 @@ router.get("/create-deck", async (req, res) => {
     res.json({success: false, err: deckRes.err});
   }
   const deckObj = deckRes.deck;
+  const id = deckObj._id.toString();
+  await addDeckToLibrary(id);
+  await addDeckCreated(req.session.passport.user, id);
   res.json({ success: true, deck: deckObj });
 });
+
+router.post("/get-cards-in-deck", async (req, res) => {
+  const deckRes = await deckConnect.getDeckById(req.body.deckId);
+  if (!deckRes.success) {
+    res.json({success:false, err: deckRes.err});
+  }
+  console.log("WTF>");
+  console.log(deckRes);
+  console.log(deckRes.deck);
+  const flashcardArray = deckRes.deck.flashcards;
+  res.json({success:true, flashcards: flashcardArray});
+});
+
+router.post("/check-answer", (req, res) => {
+  const resString = req.body.answer;
+  const correctAnswers = req.body.correctAnswers;
+  if (resString.toLowerCase() in correctAnswers) {
+    res.json({success: true});
+  } else {
+    res.json({success:false});
+  }
+
+
+});
+
 
 //add deck to library - expect req to have json with deckID and userID
 //delete deck from library -e

@@ -42,14 +42,14 @@ function DeckConnect() {
     try {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
-      console.log(await (await mainDatabase.collection(deckCollection)).findOne({_id: deckIdObj}));
+      console.log(await (await mainDatabase.collection(deckCollection)).findOne({"_id": deckIdObj}));
       //remove user from deck's list of active user's
       await mainDatabase.collection(deckCollection)
         .updateOne({_id: deckIdObj}, {$pull:{active_users: userId}});
       //remove deck from user's list of decks in library
       // await mainDatabase.collection(userCollection)
       //   .updateOne({_id: userIdObj}, {$pull: {decks_in_library: deckId}});
-      const deckObj = await mainDatabase.collection(deckCollection).findOne({_id: deckIdObj});
+      const deckObj = await mainDatabase.collection(deckCollection).findOne({"_id": deckIdObj});
       //using .aggregate and $size, get an object which has the length of deck's active_users array
       //https://www.tutorialspoint.com/count-the-number-of-items-in-an-array-in-mongodb
       //const getLength = await mainDatabase.collection(deckCollection).aggregate({$project:{"array_length":{$size: "active_users"}}});
@@ -78,7 +78,7 @@ function DeckConnect() {
     try {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
-      const deckObject = await mainDatabase.collection(deckCollection).findOne({_id: deckIdObj});
+      const deckObject = await mainDatabase.collection(deckCollection).findOne({"_id": deckIdObj});
       const deckUserList = deckObject.active_users;
       const resObject = {success: true, msg: "Successfully retrieved Deck's active user list", active_users: deckUserList};
       return resObject;
@@ -119,7 +119,7 @@ function DeckConnect() {
     try {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
-      const userObject = await mainDatabase.collection(userCollection).findOne({_id: userIdObj});
+      const userObject = await mainDatabase.collection(userCollection).findOne({"_id": userIdObj});
       const deckAuthor = userObject.username;
       newDeck.author = deckAuthor;
       newDeck.author_chain = [deckAuthor];
@@ -157,7 +157,7 @@ function DeckConnect() {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
       const deckObj = await mainDatabase.collection(deckCollection).findOne({_id: deckIdObj});
-      deckObj._id = deckObj._id.toString();
+      //deckObj._id = deckObj._id.toString();
       return {success: true, msg: "Successfully retrieved Deck", deck: deckObj};
 
     } catch (e) {
@@ -261,7 +261,7 @@ function DeckConnect() {
     try {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
-      const cardsArray = await mainDatabase.findOne({_id: deckIdObj}).flashcards;
+      const cardsArray = await mainDatabase.findOne({"_id": deckIdObj}).flashcards;
       return {success: true, msg: "Successfully retrieved Deck's flashcards list", flashcards: cardsArray};
     } catch (e) {
       console.error(e);
@@ -322,7 +322,7 @@ function DeckConnect() {
     try {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
-      const isPublic = await mainDatabase.collection(deckCollection).findOne({_id: deckIdObj}).public;
+      const isPublic = await mainDatabase.collection(deckCollection).findOne({"_id": deckIdObj}).public;
       if (isPublic) {
         await mainDatabase.collection(deckCollection)
           .updateOne({_id: deckIdObj}, {public: false});
@@ -375,7 +375,7 @@ function DeckConnect() {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
       await mainDatabase.collection(deckCollection).updateOne({_id: deckIdObj}, {$push: {flashcards:cardObj}});
-      const deck = await mainDatabase.collection(deckCollection).findOne({_id: deckIdObj});
+      const deck = await mainDatabase.collection(deckCollection).findOne({"_id": deckIdObj});
       return {success: true, msg: "Successfully added card to Deck", modifiedDeck: deck};
     } catch (e) {
       console.error(e);
@@ -500,7 +500,7 @@ function DeckConnect() {
       await mainDatabase.collection(deckCollection)
         .updateOne({_id: deckIdObj}, {$push: {authorId_chain: authorId}});
       const username = await mainDatabase.collection(userCollection)
-        .findOne({_id: userIdObj}).username;
+        .findOne({"_id": userIdObj}).username;
       await mainDatabase.collection(deckCollection)
         .updateOne({_id: deckIdObj}, {$push: {author_chain: username}});
       return {success: true, msg: "Successfully updated author chain"};

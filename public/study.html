@@ -102,20 +102,22 @@
         <main class="col col-md-9 col-lg-10 col-xxl-11" id="main-content">
           <!-- For Alerts -->
           <div id="messageSpot"></div>
-          <div class="container-fluid">
+<!--           <div class="container-fluid"> -->
           <div class="card mb-3 text-center">
             <div class="row g-0">
               <div class="col-md-8">
                 <div class="card-body">
                   <h5 class="card-title">Card title</h5>
-                  <p class="card-text">
-                    This is a wider card with supporting text below as a natural
-                    lead-in to additional content. This content is a little bit
-                    longer.
-                  </p>
-                  <p class="card-text">
-                    <button class="btn btn-primary" type="submit"> Submit Answer </button>
-                  </p>
+
+                    <form id="submitAnswerForm" name="answer">
+                    <label for="answer">Type your answer here:</label>
+                    <input type="text" class="form-control" id="answer" name="answer" required
+                        minlength="1" maxlength="150" size="50">
+
+<!--                   <p class="card-text"> -->
+                    <button class="btn btn-primary" type="submit" id="submitButton"> Submit Answer </button>
+<!--                   </p>
+ -->                </form>
                 </div>
               </div>
             </div>
@@ -123,7 +125,7 @@
         </main>
       </div>
     </div>
-  </div>
+<!--   </div> -->
 </main>
 
     <script
@@ -133,7 +135,11 @@
     ></script>
     <script type="module">
       import loggedInDemo from "./scripts/logged-in-demo.js";
-      loggedInDemo.setUpPage();
+      import study from "./scripts/study-frontend.js";
+      //loggedInDemo.setUpPage();
+      await study.setUpPage();
+      await study.startStudying();
+      await study.configureFormSubmit();
     </script>
   </body>
 </html>
