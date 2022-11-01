@@ -32,7 +32,7 @@ export async function createAndAddUser(first, last, username, rawPassword) {
 }
 
 export async function availableUsername(username) {
-  if ((await getUserByUsername(username)) == null) {
+  if (!(await getUserByUsername(username)).success) {
     return true;
   } else {
     return false;

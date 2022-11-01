@@ -5,7 +5,7 @@ function LoggedInDemo() {
 
   loggedInDemo.setUpPage = async function () {
     await util.checkAuthenticated(
-      "/login",
+      "/index",
       // Calback for page setup if valid to show page
       loggedInDemo.renderPage,
       null
@@ -30,7 +30,7 @@ function LoggedInDemo() {
           if (res.ok) {
             res = await res.json();
             if (res.success) {
-              util.redirect("/login");
+              util.redirect("/index");
             } else {
               util.showNeutralMessage(res.msg);
             }

@@ -2,11 +2,10 @@
 import express from "express";
 import passport from "passport";
 import { getUserById } from "../databaseConnect/userConnect.js";
+import { availableUsername, createAndAddUser } from "../util/user-util.js";
 import deckConnect from "../databaseConnect/deckConnect.js";
 
 const router = express.Router();
-
-// TODO -- route all non-html to html
 
 /**
  * Responds indicating whether or not the session is valid (express-session and passport).
@@ -24,12 +23,12 @@ router.post(
 );
 
 router.get("/loginFailed", (req, res) => {
-  req.session.manualData = { username: "", currentDeck: "" };
+  req.session.manualData = { username: "" };
   res.json({ success: false, msg: "Invalid username or password." });
 });
 
 router.get("/loginSucceeded", async (req, res) => {
-  req.session.manualData = { username: "", currentDeck: "" };
+  req.session.manualData = { username: "" };
   const dbResponse = await getUserById(req.session.passport.user);
   if (dbResponse.success) {
     req.session.manualData.username = dbResponse.user.username;
@@ -45,8 +44,18 @@ router.post("/getUserId", (req, res) => {
   res.json({ user: req.session.passport.user });
 });
 
-router.post("/getCurrentDeck", (req, res) => {
-  res.json({ currentDeck: req.session.manualData.currentDeck });
+router.post("/registerUser", async (req, res) => {
+  if (await availableUsername(req.body.username)) {
+    createAndAddUser(
+      req.body.first_name,
+      req.body.last_name,
+      req.body.username,
+      req.body.password
+    );
+    res.json({ success: true, msg: "Registration successful!" });
+  } else {
+    res.json({ success: false, msg: "Username unavailable. Try another." });
+  }
 });
 
 router.post("/logoutUser", (req, res) => {
@@ -121,7 +130,7 @@ router.get("/get-user-deck-previews", async (req, res) => {
   const userId = "635db5ce21884bfba4a8c3ab";
   const resObject = await deckConnect.getDecksInLibraryPreviews(userId);
   console.log("the resObject: ", resObject);
-  console.log("the resObject type: ", typeof(resObject));
+  console.log("the resObject type: ", typeof resObject);
   if (resObject.success) {
     return res.json(resObject.userDeckPreviews);
   }
@@ -138,7 +147,6 @@ router.get("/showSessionDeck", (req, res) => {
   res.json(req.session.manualData.currentDeck);
   console.log("Sending: ", res.session.manualData.currentDeck);
 });
-
 
 //ENDTESTAREA
 
