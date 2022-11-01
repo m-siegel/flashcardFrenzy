@@ -374,10 +374,12 @@ function DeckConnect() {
     const deckIdObj = new mongodb.ObjectId(deckId);
     try {
       await client.connect();
-      const mainDatabase = await client.db("MainDatabase");
-      const isPublic = await mainDatabase
-        .collection(deckCollection)
-        .findOne({ _id: deckIdObj }).public;
+      const mainDatabase = client.db("MainDatabase");
+      const isPublic = (
+        await mainDatabase
+          .collection(deckCollection)
+          .findOne({ _id: deckIdObj })
+      ).public;
       if (isPublic) {
         await mainDatabase
           .collection(deckCollection)
@@ -385,7 +387,7 @@ function DeckConnect() {
       } else {
         await mainDatabase
           .collection(deckCollection)
-          .updateOne({ _id: deckIdObj }, { public: true });
+          .updateOne({ _id: deckIdObj }, { $set: { public: true } });
       }
       return {
         success: true,
@@ -532,7 +534,7 @@ function DeckConnect() {
       const mainDatabase = await client.db("MainDatabase");
       await mainDatabase
         .collection(deckCollection)
-        .updateOne({ _id: deckIdObj }, { author: newAuthorStr });
+        .updateOne({ _id: deckIdObj }, { $set: { author: newAuthorStr } });
       return { success: true, msg: "Succesfully changed Deck's author" };
     } catch (e) {
       console.error(e);
