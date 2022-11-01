@@ -211,12 +211,20 @@ router.post("/add-deck-to-created", async (req, res) => {
   });
 });
 
+router.get("/get-decks-in-user-library", async (req, res) => {
+  const userId = req.session.passport.user;
+  let dbResponse = await userConnect.getDecksInLibrary(userId);
+  if (!dbResponse) {
+    return res.json({
+      success: false,
+      msg: "Database error. No response from database.",
+      err: new Error("No response from database"),
+    });
+  }
+  return res.json(dbResponse);
+});
+
 /** Armen */
-// router.get("/my-library", (req, res) => {
-//   if (req.session.passport.user) {
-//     res.json({success: true});
-//   }
-// });
 
 router.get("/get-user-deck-previews", async (req, res) => {
   const userId = req.session.passport.user;
@@ -238,14 +246,6 @@ router.post("/set-current-deck", (req, res) => {
     currentDeckId: req.session.manualData.currentDeck,
   });
 });
-
-//TESTAREA
-router.get("/showSessionDeck", (req, res) => {
-  res.json(req.session.manualData.currentDeck);
-  console.log("Sending: ", res.session.manualData.currentDeck);
-});
-
-//ENDTESTAREA
 
 router.post("/delete-user-from-deck", async (req, res) => {
   // console.log("req.body.deckId: ", req.session.manualData.currentDeck);
@@ -312,18 +312,18 @@ router.post("/duplicate-deck", async (req, res) => {
   res.json({ success: true, duplicateDeck: copiedDeck });
 });
 
-router.get("/get-deck-by-id", async (req, res) => {
+router.post("/get-deck-by-id", async (req, res) => {
   const deckRes = await deckConnect.getDeckById(req.body.deckId);
-  if (! deckRes.success) {
-    res.json({success:false, err: deckRes.err});
+  if (!deckRes.success) {
+    res.json({ success: false, err: deckRes.err });
   }
   res.json({ success: true, deck: deckRes.deck });
 });
 
 router.get("/create-deck", async (req, res) => {
   const deckRes = await deckConnect.createDeck(req.session.passport.user);
-  if (! deckRes.success) {
-    res.json({success: false, err: deckRes.err});
+  if (!deckRes.success) {
+    res.json({ success: false, err: deckRes.err });
   }
   const deckObj = deckRes.deck;
   res.json({ success: true, deck: deckObj });
