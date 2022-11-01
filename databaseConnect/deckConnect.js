@@ -38,16 +38,17 @@ function DeckConnect() {
     const uri = process.env.DB_URI || "mongodb://localhost:27017";
     const client = new mongodb.MongoClient(uri);
     const deckIdObj = new mongodb.ObjectId(deckId);
-    const userIdObj = new mongodb.ObjectId(userId);
+    // const userIdObj = new mongodb.ObjectId(userId);
     try {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
+      console.log(await (await mainDatabase.collection(deckCollection)).findOne({_id: deckIdObj}));
       //remove user from deck's list of active user's
       await mainDatabase.collection(deckCollection)
         .updateOne({_id: deckIdObj}, {$pull:{active_users: userId}});
       //remove deck from user's list of decks in library
-      await mainDatabase.collection(userCollection)
-        .updateOne({_id: userIdObj}, {$pull: {decks_in_library: deckId}});
+      // await mainDatabase.collection(userCollection)
+      //   .updateOne({_id: userIdObj}, {$pull: {decks_in_library: deckId}});
       const deckObj = await mainDatabase.collection(deckCollection).findOne({_id: deckIdObj});
       //using .aggregate and $size, get an object which has the length of deck's active_users array
       //https://www.tutorialspoint.com/count-the-number-of-items-in-an-array-in-mongodb
@@ -156,6 +157,7 @@ function DeckConnect() {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
       const deckObj = await mainDatabase.collection(deckCollection).findOne({_id: deckIdObj});
+      deckObj._id = deckObj._id.toString();
       return {success: true, msg: "Successfully retrieved Deck", deck: deckObj};
 
     } catch (e) {
@@ -166,6 +168,27 @@ function DeckConnect() {
     }
 
   };
+
+  deckConnect.getDeckByDateCreated = async function(dateCreated) {
+    const uri = process.env.DB_URI || "mongodb://localhost:27017";
+    const client = new mongodb.MongoClient(uri);
+    try {
+      await client.connect();
+      const mainDatabase = await client.db("MainDatabase");
+      const deckObj = await mainDatabase.collection(deckCollection).findOne({date_created: dateCreated});
+      deckObj._id = deckObj._id.toString();
+      return {success: true, msg: "Successfully retrieved Deck", deck: deckObj};
+    } catch (e) {
+      console.error(e);
+      return {success: false, msg: "Error retrieving Deck", err: e};
+    } finally {
+      await client.close();
+    }
+
+  };
+
+
+
   /*
   Gets a "preview" of all the public decks in the Deck collection. Each Deck preview object contains only a few essential Deck attributes.
   Parameters: None

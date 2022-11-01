@@ -48,19 +48,29 @@
               /></span>
             </button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Home</a></li>
-              <li><a class="dropdown-item" href="#">My Library</a></li>
-              <li><a class="dropdown-item" href="#">Explore</a></li>
-              <li><a class="dropdown-item" href="#">Create</a></li>
-              <li><a class="dropdown-item" href="#">Log Out</a></li>
+              <li>
+                <a class="dropdown-item" href="/my-library.html">My Library</a>
+              </li>
+              <li><a class="dropdown-item" href="/explore.html">Explore</a></li>
+              <li>
+                <a class="dropdown-item" href="/edit-deck.html">Create</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/user-settings.html"
+                  >User Settings</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item logoutButton" href="#">Log Out</a>
+              </li>
             </ul>
           </nav>
           <!-- end dropdown navbar -->
         </span>
-        <span class="col-8"><h1>Page Title</h1></span
+        <span class="col-8"><h1>My Library</h1></span
         ><span class="col-2"
           ><form action="/logout?_method=DELETE" method="POST">
-            <button class="btn btn-primary btn-sm" id="logoutBtn" type="submit">
+            <button class="btn btn-primary btn-sm logoutButton" type="submit">
               Log Out
             </button>
           </form></span
@@ -68,7 +78,7 @@
       </div>
     </header>
 
-        <!-- for everything below the header -->
+    <!-- for everything below the header -->
     <div class="container container-fluid">
       <div class="row">
         <!-- sidebar navbar that normally shows, when window is big enough -->
@@ -79,201 +89,296 @@
             <ul class="armea-side-nav-list navbar-nav">
               <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
               <li class="nav-item">
-                <a href="#" class="nav-link">My Library</a>
+                <a href="/my-library.html" class="nav-link">My Library</a>
               </li>
-              <li class="nav-item"><a href="#" class="nav-link">Explore</a></li>
-              <li class="nav-item"><a href="#" class="nav-link">Create</a></li>
-              <li class="nav-item"><a href="#" class="nav-link">Log Out</a></li>
+              <li class="nav-item">
+                <a href="/explore.html" class="nav-link">Explore</a>
+              </li>
+              <li class="nav-item">
+                <a href="/edit-deck.html" class="nav-link">Create</a>
+              </li>
+              <li class="nav-item">
+                <a href="/user-settings.html" class="nav-link">User Settings</a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link logoutButton">Log Out</a>
+              </li>
             </ul>
           </div>
         </nav>
         <!-- end side navbar -->
 
-
         <!-- this is where the main stuff goes -->
-        <main class="col col-md-9 col-lg-10 col-xxl-11 offcanvas-parent" id="main-content">
+        <main
+          class="col col-md-9 col-lg-10 col-xxl-11 offcanvas-parent"
+          id="main-content"
+        >
+          <!-- For Alerts -->
+          <div id="messageSpot"></div>
+          <!-- Modal for Delete Buttons -->
+          <div
+            class="modal fade"
+            id="deleteModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="deleteModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteModalLabel">
+                    Remove Deck
+                  </h5>
+                  <button
+                    type="button"
+                    class="close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">Are you sure you want to remove this Deck from your library?</div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="deleteCancel";
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+                  <button type="button" class="btn btn-primary" id="modalConfirmDelete" data-bs-dismiss="modal">
+                    Confirm Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
 
-      <div class="filterBar">
-    <button
-      class="btn btn-outline-primary filterButton"
-      type="button"
-      data-bs-toggle="offcanvas"
-      data-bs-target="#offcanvasExample"
-      aria-controls="offcanvasExample"
-    >
-      Filter
-    </button>
-    <!-- A *filter will be displayed whenever a checkbox becomes selected, and will disappear if the checkbox is unselected-->
-    <span class="filters">    *filter1    *filter2    *filter3    *filter4</span>
-  </div>
+          <!-- Modal for Duplicate Buttons -->
+          <div
+            class="modal fade"
+            id="duplicateModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="duplicateModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="duplicateModalLabel">
+                    Duplicate Deck
+                  </h5>
+                  <button
+                    type="button"
+                    class="close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">Do you want to make a copy of this Deck?</div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="duplicateCancel"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+                  <button type="button" class="btn btn-primary" id="modalConfirmDuplicate"
+                  data-bs-dismiss="modal">
+                    Confirm Duplication
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
 
-<!-- One thing I don't like about the dropdown checkboxes: Clicking the label next to a checkbox will collapse the dropdown options, rather than selecting the checkbox-->
-    <div
-      class="offcanvas offcanvas-start offcanvasBg"
-      tabindex="-1"
-      id="offcanvasExample"
-      aria-labelledby="offcanvasExampleLabel"
-    >
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Filter by:</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="offcanvas"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="offcanvas-body">
-        <div class="dropdown mt-3">
-          <button
-            class="btn btn-dark dropdown-toggle"
-            type="button"
-            data-bs-toggle="dropdown"
-            data-bs-auto-close="false"
+          <div class="filterBar">
+            <button
+              class="btn btn-outline-primary filterButton"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasExample"
+              aria-controls="offcanvasExample"
+            >
+              Filter
+            </button>
+            <!-- A *filter will be displayed whenever a checkbox becomes selected, and will disappear if the checkbox is unselected-->
+            <span class="filters"> *filter1 *filter2 *filter3 *filter4</span>
+          </div>
+
+          <!-- One thing I don't like about the dropdown checkboxes: Clicking the label next to a checkbox will collapse the dropdown options, rather than selecting the checkbox-->
+          <div
+            class="offcanvas offcanvas-start offcanvasBg"
+            tabindex="-1"
+            id="offcanvasExample"
+            aria-labelledby="offcanvasExampleLabel"
           >
-            Created by:
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="#"
-                ><div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                  />
-                  <label class="form-check-label" for="flexCheckDefault">
-                    Myself
-                  </label>
-                </div></a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"
-                ><div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                  />
-                  <label class="form-check-label" for="flexCheckDefault">
-                    Other Users
-                  </label>
-                </div></a
-              >
-            </li>
-          </ul>
-        </div>
-                <div class="dropdown mt-3">
-          <button
-            class="btn btn-dark dropdown-toggle"
-            type="button"
-            data-bs-toggle="dropdown"
-            data-bs-auto-close="false"
-          >
-            Filter2:
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="#"
-                ><div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                  />
-                  <label class="form-check-label" for="flexCheckDefault">
-                    option1
-                  </label>
-                </div></a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"
-                ><div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                  />
-                  <label class="form-check-label" for="flexCheckDefault">
-                    option2
-                  </label>
-                </div></a
-              >
-            </li>
-          </ul>
-        </div>
-        <div class="dropdown mt-3">
-          <button
-            class="btn btn-dark dropdown-toggle"
-            type="button"
-            data-bs-toggle="dropdown"
-            data-bs-auto-close="false"
-          >
-            Tags:
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="#"
-                ><div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                  />
-                  <label class="form-check-label" for="flexCheckDefault">
-                    UserTag1
-                  </label>
-                </div></a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"
-                ><div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                  />
-                  <label class="form-check-label" for="flexCheckDefault">
-                    UserTag2
-                  </label>
-                </div></a
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  
-      <div>
-        <h2 class="sectionHeader">Choose a Deck to Start Studying!</h2>
-      </div>
-      <section>
-      <!-- This is just for demonstration, the deck icons will be generated dynamically -->
-      <div class="container-text-center deckGridDisplay">
-        <div class="row" id="deckGrid">
-          <!-- Deck Icons Go Here -->
-        </div>
-      </div>
-    </section>
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasExampleLabel">
+                Filter by:
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="offcanvas-body">
+              <div class="dropdown mt-3">
+                <button
+                  class="btn btn-dark dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  data-bs-auto-close="false"
+                >
+                  Created by:
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="#"
+                      ><div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="flexCheckDefault"
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Myself
+                        </label>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#"
+                      ><div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="flexCheckDefault"
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Other Users
+                        </label>
+                      </div></a
+                    >
+                  </li>
+                </ul>
+              </div>
+              <div class="dropdown mt-3">
+                <button
+                  class="btn btn-dark dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  data-bs-auto-close="false"
+                >
+                  Filter2:
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="#"
+                      ><div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="flexCheckDefault"
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          option1
+                        </label>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#"
+                      ><div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="flexCheckDefault"
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          option2
+                        </label>
+                      </div></a
+                    >
+                  </li>
+                </ul>
+              </div>
+              <div class="dropdown mt-3">
+                <button
+                  class="btn btn-dark dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  data-bs-auto-close="false"
+                >
+                  Tags:
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="#"
+                      ><div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="flexCheckDefault"
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          UserTag1
+                        </label>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#"
+                      ><div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="flexCheckDefault"
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          UserTag2
+                        </label>
+                      </div></a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2 class="sectionHeader">Choose a Deck to Start Studying!</h2>
+          </div>
+          <section>
+            <!-- This is just for demonstration, the deck icons will be generated dynamically -->
+            <div class="container-text-center deckGridDisplay">
+              <div class="row" id="deckGrid">
+                <!-- Deck Icons Go Here -->
+              </div>
+            </div>
+          </section>
         </main>
       </div>
     </div>
 
+    <!-- Armen Sarkisian -->
 
-
-
-<!-- Armen Sarkisian -->
-
-  
     <!-- JavaScript Bundle with Popper -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
@@ -283,8 +388,12 @@
     <script src="./scripts/deck-grid.js"></script>
     <script type="module">
       import myLibrary from "./scripts/my-library-frontend.js";
-      myLibrary.setUpPage();
-      // myLibrary.renderUserDecks();
+      async function setUpLibrary() {
+        await myLibrary.setUpPage();
+        //await myLibrary.setDeckOptionClickEvents();
+        await myLibrary.setModalEvents();
+      }
+      setUpLibrary();
     </script>
   </body>
 </html>
