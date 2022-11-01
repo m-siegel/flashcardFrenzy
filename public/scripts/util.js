@@ -73,6 +73,45 @@ function Util() {
     }
   };
 
+  util.setUpPage = async function () {
+    await util.checkAuthenticated(
+      "/index",
+      // Callback for page setup if valid to show page
+      util.renderPage,
+      null
+    );
+  };
+
+  util.renderPage = async function () {
+    await util.setUpLogoutButtons();
+    util.displayPageBody();
+  };
+
+  util.setUpLogoutButtons = async function () {
+    const logoutButtons = document.querySelectorAll(".logoutButton");
+    logoutButtons.forEach((btn) => {
+      btn.addEventListener("click", async (evt) => {
+        evt.preventDefault();
+        let res;
+        try {
+          res = await fetch("/logoutUser", {
+            method: "POST",
+          });
+          if (res.ok) {
+            res = await res.json();
+            if (res.success) {
+              util.redirect("/index");
+            } else {
+              util.showNeutralMessage(res.msg);
+            }
+          }
+        } catch (err) {
+          util.showErrorMessage(err);
+        }
+      });
+    });
+  };
+
   util.getUsername = async function () {
     return await (await fetch("/getUsername", { method: "POST" })).json();
   };

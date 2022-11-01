@@ -213,11 +213,6 @@ router.post("/add-deck-to-created", async (req, res) => {
 });
 
 /** Armen */
-// router.get("/my-library", (req, res) => {
-//   if (req.session.passport.user) {
-//     res.json({success: true});
-//   }
-// });
 
 router.get("/get-user-deck-previews", async (req, res) => {
   const userId = req.session.passport.user;
@@ -240,17 +235,8 @@ router.post("/set-current-deck", (req, res) => {
   });
 });
 
-//TESTAREA
-router.get("/showSessionDeck", (req, res) => {
-  res.json(req.session.manualData.currentDeck);
-  console.log("Sending: ", res.session.manualData.currentDeck);
-});
-
-//ENDTESTAREA
 
 router.post("/delete-user-from-deck", async (req, res) => {
-  // console.log("req.body.deckId: ", req.session.manualData.currentDeck);
-  // console.log("req.session.passport.user:", req.session.passport.user);
   await deckConnect.deleteDeck(
     req.session.manualData.currentDeck,
     req.session.passport.user
@@ -264,7 +250,6 @@ router.post("/delete-user-from-deck", async (req, res) => {
  */
 router.post("/remove-deck-from-library", async (req, res) => {
   const deckId = req.body.deckId;
-  //const deckId = req.session.manualData.currentDeck;
   const userId = req.session.passport.user;
   if (!deckId) {
     return res.json({
@@ -302,7 +287,7 @@ router.post("/duplicate-deck", async (req, res) => {
     req.session.manualData.currentDeck
   );
   const deckToCopy = resObject.deck;
-  console.log("The deck to copy: ", deckToCopy);
+
   delete deckToCopy._id; //So mongodb will generate a new id
   deckToCopy.active_users.push(req.session.passport.user);
   const currentDate = new Date();
@@ -339,17 +324,16 @@ router.post("/get-cards-in-deck", async (req, res) => {
   if (!deckRes.success) {
     res.json({success:false, err: deckRes.err});
   }
-  console.log("WTF>");
-  console.log(deckRes);
-  console.log(deckRes.deck);
+
   const flashcardArray = deckRes.deck.flashcards;
   res.json({success:true, flashcards: flashcardArray});
 });
 
 router.post("/check-answer", (req, res) => {
-  const resString = req.body.answer;
+  let resString = req.body.answer;
   const correctAnswers = req.body.correctAnswers;
-  if (resString.toLowerCase() in correctAnswers) {
+
+  if (correctAnswers.includes(resString) || correctAnswers.includes(resString.toLowerCase())) {
     res.json({success: true});
   } else {
     res.json({success:false});
@@ -359,7 +343,5 @@ router.post("/check-answer", (req, res) => {
 });
 
 
-//add deck to library - expect req to have json with deckID and userID
-//delete deck from library -e
 
 export default router;

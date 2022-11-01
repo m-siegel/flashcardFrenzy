@@ -157,7 +157,7 @@ function DeckConnect() {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
       const deckObj = await mainDatabase.collection(deckCollection).findOne({_id: deckIdObj});
-      //deckObj._id = deckObj._id.toString();
+      deckObj._id = deckObj._id.toString();
       return {success: true, msg: "Successfully retrieved Deck", deck: deckObj};
 
     } catch (e) {
