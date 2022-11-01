@@ -21,10 +21,14 @@ a {
   color: #00B7FF;
 }
 
+.logo {
+  height: 10vh;
+}
+
 #armea-top-banner > div.row {
   /* display: flex; */
   min-height: 10vh;
-  background-color: var(--armea-dark-grey);
+  background-color: #000;
   color: #FFF;
   align-items: center;
   text-align: center;
@@ -36,10 +40,11 @@ a {
 
 .armea-side-nav-outer {
   border-right: 2px solid var(--armea-light-blue);
+  margin-top: 5px;
 }
 
 .armea-deck-title {
   background-color: var(--armea-light-blue);
   color: #FFF;
-  margin-bottom: 10px;
+  align-items: center;
 }
