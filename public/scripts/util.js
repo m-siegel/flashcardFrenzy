@@ -11,7 +11,7 @@ function Util() {
    * @param {string} msgBody   The main message body.
    * @param {string} msgHeader   The message header (if any) to be emphasized.
    */
-  util.addAlert = function (parentElement, alertType, msgBody, msgHeader) {
+  util.addAlert = function (parentElement, alertType, msgBody, msgHeader = "") {
     const newAlert = document.createElement("div");
     newAlert.innerHTML = util.getNewAlert(alertType, msgBody, msgHeader);
     parentElement.append(newAlert);
