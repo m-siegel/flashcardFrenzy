@@ -274,6 +274,13 @@ function EditDeck() {
               "Couldn't update deck name"
             );
           }
+        } else if (!editDeck.form.nameElement.value) {
+          editDeck.form.nameElement.value = editDeck.deck.name;
+          util.addAlert(
+            editDeck.messageSpotElement,
+            "warning",
+            "The deck name must have at least one character"
+          );
         }
       } catch (err) {
         util.addAlert(
