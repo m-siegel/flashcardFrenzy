@@ -32,8 +32,27 @@ function EditDeck() {
   // Card list elements
   editDeck.cardListContent = document.querySelector("#cardsListContent");
   editDeck.cardsList = [];
-  editDeck.cardsListSaveCards = document.querySelector("#cardsListSaveCards");
+  editDeck.cardsListSaveChanges = document.querySelector(
+    "#cardsListSaveChanges"
+  );
   editDeck.cardsListAddCard = document.querySelector("#cardsListAddCard");
+
+  editDeck.newCardModal = {};
+  editDeck.newCardModal.cardBtnCloseWithoutSaving = document.querySelector(
+    "#cardBtnCloseWithoutSaving"
+  );
+  editDeck.newCardModal.cardsListContent =
+    document.querySelector("#cardsListContent");
+  editDeck.newCardModal.currCardAnswerList = [];
+
+  editDeck.newCardModal.newCardForm = document.querySelector("#newCardForm");
+  editDeck.newCardModal.addAnswerBtn = document.querySelector("#addAnswerBtn");
+  editDeck.newCardModal.cardBtnSaveCard =
+    document.querySelector("#cardBtnSaveCard");
+  editDeck.newCardModal.cardAnswers = document.querySelector("#cardAnswers");
+  editDeck.newCardModal.cardAnswersListJS = [];
+  editDeck.newCardModal.answerList = document.querySelector("#answerList");
+  editDeck.newCardModal.prompt = document.querySelector("#prompt");
 
   editDeck.setUpPage = async function () {
     await util.checkAuthenticated(
@@ -448,8 +467,28 @@ function EditDeck() {
     return element;
   };
 
+  editDeck.getNewCardAnswerItem = function (answer) {
+    const btn = document.createElement("button");
+    btn.setAttribute("type", "button");
+    btn.className = "btn-close";
+    btn.setAttribute("aria-label", "Close");
+
+    const item = document.createElement("li");
+    item.className = "list-group-item list-group-item-action";
+
+    item.innerText = `${answer} `;
+    item.appendChild(btn);
+    btn.addEventListener("click", () => {
+      item.remove();
+      editDeck.newCardModal.cardAnswersListJS =
+        editDeck.newCardModal.cardAnswersListJS.filter((v) => v !== answer);
+    });
+    editDeck.newCardModal.cardAnswersListJS.push(answer);
+    return item;
+  };
+
   editDeck.setUpCardsListButtons = function () {
-    editDeck.cardsListSaveCards.addEventListener("click", async (evt) => {
+    editDeck.cardsListSaveChanges.addEventListener("click", async (evt) => {
       evt.preventDefault();
       // update deck cards
       try {
@@ -491,9 +530,142 @@ function EditDeck() {
         );
       }
     });
-    editDeck.cardsListAddCard.addEventListener("click", () => {
-      console.log("clicked add card");
+
+    editDeck.newCardModal.addAnswerBtn.addEventListener("click", (evt) => {
+      evt.preventDefault();
+      const val = editDeck.newCardModal.cardAnswers.value;
+      if (val && val.length > 0) {
+        editDeck.newCardModal.answerList.appendChild(
+          editDeck.getNewCardAnswerItem(val)
+        );
+        editDeck.newCardModal.cardAnswers.value = "";
+      }
     });
+
+    editDeck.newCardModal.newCardForm.addEventListener(
+      "submit",
+      async (evt) => {
+        evt.preventDefault();
+
+        // clear past errors to make room for more
+        editDeck.messageSpotElement.innerHTML = "";
+
+        if (
+          !(
+            editDeck.newCardModal.prompt.value &&
+            editDeck.newCardModal.prompt.value.length > 0
+          )
+        ) {
+          util.addAlert(
+            editDeck.messageSpotElement,
+            "warning",
+            "Prompt must be at least one character long."
+          );
+          return;
+        }
+        if (!(editDeck.newCardModal.cardAnswersListJS.length > 0)) {
+          util.addAlert(
+            editDeck.messageSpotElement,
+            "warning",
+            "Answer list must have at least one answer."
+          );
+          return;
+        }
+
+        const card = editDeck.createDefaultCard();
+        card.sideA.prompt = editDeck.newCardModal.prompt.value;
+        card.sideB.answer_list =
+          editDeck.newCardModal.cardAnswersListJS.slice();
+        editDeck.cardsList.push(card);
+
+        try {
+          let dbCardsRes = await fetch("/update-deck-flashcards", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              deckId: editDeck.deck._id,
+              flashcardsArray: editDeck.cardsList.slice(),
+            }),
+          });
+          if (dbCardsRes.ok) {
+            dbCardsRes = await dbCardsRes.json();
+            console.log(dbCardsRes);
+            if (dbCardsRes.success) {
+              editDeck.deck.flashcards = editDeck.cardsList.slice(); // copy
+              editDeck.cardListContent.appendChild(
+                editDeck.getCardListItem(card)
+              );
+              editDeck.clearModalForm();
+              return;
+            } else {
+              editDeck.cardsList = editDeck.deck.flashcards.slice();
+              util.addAlert(
+                editDeck.messageSpotElement,
+                "warning",
+                "Couldn't update deck flashcards"
+              );
+              editDeck.clearModalForm();
+              return;
+            }
+          } else {
+            editDeck.cardsList = editDeck.deck.flashcards.slice();
+            util.addAlert(
+              editDeck.messageSpotElement,
+              "warning",
+              "Couldn't update deck flashcards"
+            );
+            editDeck.clearModalForm();
+            return;
+          }
+        } catch (err) {
+          editDeck.cardsList = editDeck.deck.flashcards.slice();
+          util.addAlert(
+            editDeck.messageSpotElement,
+            "warning",
+            "Error updating deck flashcards:",
+            err
+          );
+          editDeck.clearModalForm();
+        }
+      }
+    );
+
+    editDeck.newCardModal.cardBtnCloseWithoutSaving.addEventListener(
+      "click",
+      () => {
+        editDeck.clearModalForm();
+      }
+    );
+  };
+
+  editDeck.clearModalForm = function () {
+    editDeck.newCardModal.cardAnswersListJS = [];
+    editDeck.newCardModal.prompt.value = "";
+    editDeck.newCardModal.answerList.innerHTML = "";
+    editDeck.newCardModal.cardAnswers.value = "";
+  };
+
+  editDeck.createDefaultCard = function () {
+    const card = {
+      sideA: {
+        prompt: "",
+        answer_list: [],
+        hint: "",
+      },
+      sideB: {
+        prompt: "",
+        answer_list: [],
+        hint: "",
+      },
+      prompt_side: "sideA",
+      tag: "",
+      last_success: 1,
+      success_rate: {},
+      average_success_rate: {},
+    };
+    return card;
   };
 
   return editDeck;

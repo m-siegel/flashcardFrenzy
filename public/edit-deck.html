@@ -229,20 +229,10 @@
                     </div>
                     <div class="row g-3 mb-2">
                       <div id="tagsList" class="form-text">
-                        <ul class="list-group">
-                          <li class="list-group-item list-group-item-action">
-                            Tag 1
-                            <button
-                              type="button"
-                              class="btn-close"
-                              aria-label="Close"
-                            ></button>
-                          </li>
-                        </ul>
+                        <ul class="list-group"></ul>
                       </div>
                     </div>
 
-                    <!-- we'll want to suppress default when handling so the page doesn't reload -->
                     <button type="submit" class="btn btn-primary mt-3">
                       Save
                     </button>
@@ -262,20 +252,124 @@
                   <div class="row">
                     <span class="col"
                       ><button
-                        id="cardsListSaveCards"
+                        id="cardsListSaveChanges"
                         class="btn btn-primary btn-sm"
+                        type="button"
                       >
-                        Save Cards
+                        Save Changes
                       </button></span
                     ><span class="col"
                       ><button
                         id="cardsListAddCard"
                         class="btn btn-primary btn-sm"
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#newCardModal"
                       >
                         Add Card
                       </button></span
                     >
                   </div>
+
+                  <!-- New Card Modal -- source Bootstrap -->
+                  <div
+                    class="modal fade"
+                    id="newCardModal"
+                    data-bs-backdrop="static"
+                    data-bs-keyboard="false"
+                    tabindex="-1"
+                    aria-labelledby="staticBackdropLabel"
+                    aria-hidden="true"
+                  >
+                    <div
+                      class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                    >
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h3 class="modal-title fs-5" id="newCardModalLabel">
+                            New Card
+                          </h3>
+                          <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                          ></button>
+                        </div>
+
+                        <form action="" id="newCardForm">
+                          <div class="modal-body">
+                            <!-- card prompt input -->
+                            <div class="row p-3">
+                              <label class="form-label" for="prompt"
+                                >Prompt</label
+                              >
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="prompt"
+                                name="prompt"
+                                aria-label="Card Prompt"
+                              />
+                            </div>
+
+                            <!-- card answers input -->
+                            <div class="row mt-3">
+                              <div class="row">
+                                <label class="form-label" for="answerList"
+                                  >Answer List</label
+                                >
+                              </div>
+                              <div class="row p-3">
+                                <div class="col-12 col-sm-9">
+                                  <input
+                                    type="text"
+                                    id="cardAnswers"
+                                    name="cardAnswers"
+                                    class="form-control"
+                                    aria-describedby="answerList"
+                                    0
+                                  />
+                                </div>
+                                <div class="col-sm-3 mt-2">
+                                  <button
+                                    class="btn btn-primary btn-sm"
+                                    id="addAnswerBtn"
+                                  >
+                                    Add Answer
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row g-3 mb-2">
+                              <div id="answerList" class="form-text">
+                                <ul class="list-group"></ul>
+                              </div>
+                            </div>
+
+                            <div class="modal-footer">
+                              <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                                id="cardBtnCloseWithoutSaving"
+                              >
+                                Close Without Saving
+                              </button>
+                              <button
+                                type="submit"
+                                class="btn btn-primary"
+                                id="cardBtnSaveCard"
+                              >
+                                Save Card
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+
                   <div row id="cardsListContent"></div>
                 </section>
               </div>
