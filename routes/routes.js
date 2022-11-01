@@ -345,10 +345,20 @@ router.post("/check-answer", (req, res) => {
   } else {
     return res.json({success:false});
   }
+});
 
+router.post("/change-username", async (req, res) => {
+  const newName = req.body.newUsername;
+  const resObject = await userConnect.updateUsername(req.session.passport.user, newName);
+  console.log("The resObject from router");
+  return res.json(resObject);
 
 });
 
+router.get("/delete-account", async (req, res) => {
+  const resObject = await userConnect.deleteUser(req.session.passport.user);
+  return res.json(resObject);
+});
 
 
 export default router;

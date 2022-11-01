@@ -360,6 +360,7 @@ function DeckConnect() {
     }
   };
 
+
   /*
   Adds a new Card to the specified Deck.
   Parameters: ID of the deck to be updated, Card object to be added to the deck
@@ -406,6 +407,26 @@ function DeckConnect() {
       await client.close();
     }
   };
+
+  deckConnect.updateCardsList = async function(deckId, cardsList) {
+    const uri = process.env.DB_URI || "mongodb://localhost:27017";
+    const client = new mongodb.MongoClient(uri);
+    const deckIdObj = new mongodb.ObjectId(deckId);
+    try {
+      await client.connect();
+      const mainDatabase = await client.db("MainDatabase");
+      await mainDatabase.collectionName(deckCollection)
+        .updateOne({_id: deckIdObj}, {$set: {flashcards: cardsList}});
+      return {success: true, msg: "Successfully removed flashcard from Deck"};
+    } catch (e) {
+      console.error(e);
+      return {success: false, msg: "Failed to remove card from Deck.", err: e};
+    } finally {
+      await client.close();
+    }
+
+  };
+
 
   /*
   Replaces a Deck's existing array of Deck Tags with an updated array of new Deck Tags.

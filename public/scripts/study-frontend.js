@@ -62,7 +62,6 @@ function Study() {
 
   study.configureFormSubmit = async function () {
     const submitForm = document.querySelector("#submitAnswerForm");
-    console.log("did the query selector work?", submitForm);
     submitForm.addEventListener("submit", async (evt) => {
       evt.preventDefault();
       messageSpot.innerHTML = "";
