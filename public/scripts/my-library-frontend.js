@@ -21,8 +21,6 @@ function MyLibrary() {
     const deckPreviews = await (
       await fetch("get-user-deck-previews", { method: "GET" })
     ).json();
-    console.log("the deck previews type: ", typeof deckPreviews);
-    console.log("the deck previews:", deckPreviews);
     for (let i = 0; i < deckPreviews.length; i++) {
       iconGenerator.generateDeckIcon(
         deckPreviews[i].author,
@@ -30,7 +28,6 @@ function MyLibrary() {
         deckPreviews[i].deck_tags,
         deckPreviews[i]._id
       );
-      console.log(deckPreviews[i]);
     }
   };
 
@@ -63,7 +60,6 @@ function MyLibrary() {
       body: JSON.stringify({ deckId: deckId }),
     })).json();
     const deckToGenerate = res.duplicateDeck.deck;
-    console.log(deckToGenerate);
     iconGenerator
       .generateDeckIcon(deckToGenerate.author, deckToGenerate.name, deckToGenerate.deck_tags, deckToGenerate._id);
     if (!res.ok) {
