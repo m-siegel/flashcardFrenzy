@@ -471,7 +471,7 @@ function DeckConnect() {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
       await mainDatabase
-        .collectionName(deckCollection)
+        .collection(deckCollection)
         .updateOne(
           { _id: deckIdObj },
           { $pull: { flashcards: { id: cardId } } }
@@ -495,16 +495,16 @@ function DeckConnect() {
     const deckIdObj = new mongodb.ObjectId(deckId);
     try {
       await client.connect();
-      const mainDatabase = await client.db("MainDatabase");
+      const mainDatabase = client.db("MainDatabase");
       await mainDatabase
-        .collectionName(deckCollection)
+        .collection(deckCollection)
         .updateOne({ _id: deckIdObj }, { $set: { flashcards: cardsList } });
       return { success: true, msg: "Successfully removed flashcard from Deck" };
     } catch (e) {
       console.error(e);
       return {
         success: false,
-        msg: "Failed to remove card from Deck.",
+        msg: "Failed to update card from Deck.",
         err: e,
       };
     } finally {
