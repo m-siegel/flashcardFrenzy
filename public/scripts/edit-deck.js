@@ -193,9 +193,11 @@ function EditDeck() {
       editDeck.form.tagsListElement.innerHTML = "";
       editDeck.form.tagsListValues = [];
       editDeck.deck.deck_tags.forEach((t) => {
-        editDeck.form.tagsListElement.appendChild(
-          editDeck.getNewTagslistItemForDeck(t)
-        );
+        if (t && t.length > 0) {
+          editDeck.form.tagsListElement.appendChild(
+            editDeck.getNewTagslistItemForDeck(t)
+          );
+        }
       });
     }
   };
@@ -225,9 +227,11 @@ function EditDeck() {
     editDeck.form.addTagBtnElement.addEventListener("click", (evt) => {
       evt.preventDefault();
       const val = editDeck.form.deckTagsElement.value;
-      editDeck.form.tagsListElement.appendChild(
-        editDeck.getNewTagslistItemForDeck(val)
-      );
+      if (val && val.length > 0) {
+        editDeck.form.tagsListElement.appendChild(
+          editDeck.getNewTagslistItemForDeck(val)
+        );
+      }
     });
 
     editDeck.form.form.addEventListener("submit", async (evt) => {
@@ -237,24 +241,32 @@ function EditDeck() {
       editDeck.messageSpotElement.innerHTML = "";
 
       // update deck name if needed
-      if (
-        editDeck.form.nameElement.value &&
-        editDeck.form.nameElement.value !== editDeck.deck.name
-      ) {
-        let dbNameRes = await fetch("/update-deck-name", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            deckId: editDeck.deck._id,
-            newName: editDeck.form.nameElement.value,
-          }),
-        });
-        if (dbNameRes.ok) {
-          dbNameRes = await dbNameRes.json();
-          if (dbNameRes.success) {
-            editDeck.deck.name = editDeck.form.nameElement.value;
+      try {
+        if (
+          editDeck.form.nameElement.value &&
+          editDeck.form.nameElement.value !== editDeck.deck.name
+        ) {
+          let dbNameRes = await fetch("/update-deck-name", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              deckId: editDeck.deck._id,
+              newName: editDeck.form.nameElement.value,
+            }),
+          });
+          if (dbNameRes.ok) {
+            dbNameRes = await dbNameRes.json();
+            if (dbNameRes.success) {
+              editDeck.deck.name = editDeck.form.nameElement.value;
+            } else {
+              util.addAlert(
+                editDeck.messageSpotElement,
+                "warning",
+                "Couldn't update deck name"
+              );
+            }
           } else {
             util.addAlert(
               editDeck.messageSpotElement,
@@ -262,34 +274,44 @@ function EditDeck() {
               "Couldn't update deck name"
             );
           }
-        } else {
-          util.addAlert(
-            editDeck.messageSpotElement,
-            "warning",
-            "Couldn't update deck name"
-          );
         }
+      } catch (err) {
+        util.addAlert(
+          editDeck.messageSpotElement,
+          "warning",
+          "Error updating deck name:",
+          err
+        );
       }
 
       // udate deck visibility if needed
-      if (
-        (editDeck.form.visibilityPublicElement.checked &&
-          !editDeck.deck.public) ||
-        (editDeck.form.visibilityPrivateElement.checked && editDeck.deck.public)
-      ) {
-        let dbPublicRes = await fetch("/update-deck-privacy", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            deckId: editDeck.deck._id,
-          }),
-        });
-        if (dbPublicRes.ok) {
-          dbPublicRes = await dbPublicRes.json();
-          if (dbPublicRes.success) {
-            editDeck.deck.public = !editDeck.deck.public;
+      try {
+        if (
+          (editDeck.form.visibilityPublicElement.checked &&
+            !editDeck.deck.public) ||
+          (editDeck.form.visibilityPrivateElement.checked &&
+            editDeck.deck.public)
+        ) {
+          let dbPublicRes = await fetch("/update-deck-privacy", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              deckId: editDeck.deck._id,
+            }),
+          });
+          if (dbPublicRes.ok) {
+            dbPublicRes = await dbPublicRes.json();
+            if (dbPublicRes.success) {
+              editDeck.deck.public = !editDeck.deck.public;
+            } else {
+              util.addAlert(
+                editDeck.messageSpotElement,
+                "warning",
+                "Couldn't update deck privacy"
+              );
+            }
           } else {
             util.addAlert(
               editDeck.messageSpotElement,
@@ -297,30 +319,39 @@ function EditDeck() {
               "Couldn't update deck privacy"
             );
           }
-        } else {
-          util.addAlert(
-            editDeck.messageSpotElement,
-            "warning",
-            "Couldn't update deck privacy"
-          );
         }
+      } catch (err) {
+        util.addAlert(
+          editDeck.messageSpotElement,
+          "warning",
+          "Error updating deck privacy:",
+          err
+        );
       }
 
       // update deck tags
-      let dbTagsRes = await fetch("/update-deck-tags", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          deckId: editDeck.deck._id,
-          tagsArray: editDeck.form.tagsListValues.slice(),
-        }),
-      });
-      if (dbTagsRes.ok) {
-        dbTagsRes = await dbTagsRes.json();
-        if (dbTagsRes.success) {
-          editDeck.deck.deck_tags = editDeck.form.tagsListValues.slice(); // copy
+      try {
+        let dbTagsRes = await fetch("/update-deck-tags", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            deckId: editDeck.deck._id,
+            tagsArray: editDeck.form.tagsListValues.slice(),
+          }),
+        });
+        if (dbTagsRes.ok) {
+          dbTagsRes = await dbTagsRes.json();
+          if (dbTagsRes.success) {
+            editDeck.deck.deck_tags = editDeck.form.tagsListValues.slice(); // copy
+          } else {
+            util.addAlert(
+              editDeck.messageSpotElement,
+              "warning",
+              "Couldn't update deck tags"
+            );
+          }
         } else {
           util.addAlert(
             editDeck.messageSpotElement,
@@ -328,11 +359,12 @@ function EditDeck() {
             "Couldn't update deck tags"
           );
         }
-      } else {
+      } catch (err) {
         util.addAlert(
           editDeck.messageSpotElement,
           "warning",
-          "Couldn't update deck tags"
+          "Error updating deck tags:",
+          err
         );
       }
 
