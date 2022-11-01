@@ -102,10 +102,11 @@
         <!-- this is where the main stuff goes -->
         <main class="col-12 col-md-9 col-lg-10 col-xxl-11" id="main-content">
           <!-- For Alerts -->
-          
+
           <header class="row armea-deck-title">
-            <div class="col-sm-8 col-md-6"><h2 id="deckName-header">Deck Name</h2></div>
-            <div class="col-sm-4 col-md-6">Deck Visibility: <span id="deckVisibility-header"></span></div>
+            <div class="col-sm-8 col-md-6">
+              <h2 id="deckName-header">Deck Name</h2>
+            </div>
           </header>
           <div class="row" id="messageSpot"></div>
           <!-- Tabs row -->
@@ -126,18 +127,6 @@
               </button>
               <button
                 class="nav-link"
-                id="nav-previewDeck-tab"
-                data-bs-toggle="tab"
-                data-bs-target="#nav-previewDeck"
-                type="button"
-                role="tab"
-                aria-controls="nav-previewDeck"
-                aria-selected="false"
-              >
-                Preview Deck
-              </button>
-              <button
-                class="nav-link"
                 id="nav-cardsList-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#nav-cardsList"
@@ -147,18 +136,6 @@
                 aria-selected="true"
               >
                 Cards List
-              </button>
-              <button
-                class="nav-link"
-                id="nav-addCard-tab"
-                data-bs-toggle="tab"
-                data-bs-target="#nav-addCard"
-                type="button"
-                role="tab"
-                aria-controls="nav-addCard"
-                aria-selected="false"
-              >
-                Add Card
               </button>
             </nav>
 
@@ -178,21 +155,46 @@
                       <!-- deck name input -->
                       <div class="col-12 col-md-8 pe-5 mb-3">
                         <label class="form-label" for="name">Deck Name</label>
-                        <input type="text" class="form-control" id="name" name="name" value="Deck Name" aria-label="Deck name">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="name"
+                          name="name"
+                          value="Deck Name"
+                          aria-label="Deck name"
+                        />
                       </div>
                       <!-- visibility input -->
                       <div class="col-12 col-md-4 mt-3">
-                        <label class="form-label" for="visibility-radios">Visibility</label>
+                        <label class="form-label" for="visibility-radios"
+                          >Visibility</label
+                        >
                         <div id="visibility-radios">
                           <div class="form-check">
-                            <input class="form-check-input" type="radio" name="visibility" id="visibility-public">
-                            <label class="form-check-label" for="visibility-public">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="visibility"
+                              id="visibility-public"
+                            />
+                            <label
+                              class="form-check-label"
+                              for="visibility-public"
+                            >
                               Public
                             </label>
                           </div>
                           <div class="form-check">
-                            <input class="form-check-input" type="radio" name="visibility" id="visibility-private">
-                            <label class="form-check-label" for="visibility-private">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="visibility"
+                              id="visibility-private"
+                            />
+                            <label
+                              class="form-check-label"
+                              for="visibility-private"
+                            >
                               Private
                             </label>
                           </div>
@@ -202,40 +204,52 @@
 
                     <!-- deck tags input -->
                     <div class="row mt-3">
-                      <div class="row"><label class="form-label" for="deckTags">Deck Tags</label></div>
+                      <div class="row">
+                        <label class="form-label" for="deckTags"
+                          >Deck Tags</label
+                        >
+                      </div>
                       <div class="row">
                         <div class="col-12 col-sm-9">
-                          <input type="text" id="deckTags" name="deckTags" class="form-control" aria-describedby="tagsList"0>
+                          <input
+                            type="text"
+                            id="deckTags"
+                            name="deckTags"
+                            class="form-control"
+                            aria-describedby="tagsList"
+                            0
+                          />
                         </div>
-                        <div class="col-sm-3 mt-2"><button class="btn btn-primary btn-sm" id="addTagBtn">Add Tag</button></div>
+                        <div class="col-sm-3 mt-2">
+                          <button class="btn btn-primary btn-sm" id="addTagBtn">
+                            Add Tag
+                          </button>
+                        </div>
                       </div>
                     </div>
                     <div class="row g-3 mb-2">
                       <div id="tagsList" class="form-text">
                         <ul class="list-group">
-                          <li class="list-group-item list-group-item-action">Tag 1 <button type="button" class="btn-close" aria-label="Close"></button></li>
+                          <li class="list-group-item list-group-item-action">
+                            Tag 1
+                            <button
+                              type="button"
+                              class="btn-close"
+                              aria-label="Close"
+                            ></button>
+                          </li>
                         </ul>
                       </div>
                     </div>
 
                     <!-- we'll want to suppress default when handling so the page doesn't reload -->
-                    <button type="submit" class="btn btn-primary mt-3">Save</button>
+                    <button type="submit" class="btn btn-primary mt-3">
+                      Save
+                    </button>
                   </form>
                 </section>
               </div>
 
-              <!-- Pane Preview Deck -->
-              <div
-                class="tab-pane fade p-3"
-                id="nav-previewDeck"
-                role="tabpanel"
-                aria-labelledby="nav-previewDeck-tab"
-              >
-                <section class="row p-3">
-                  <h3>Preview Deck</h3>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi, odit accusantium maiores quam dicta excepturi similique dolorum earum amet rem!</p>
-                </section>
-              </div>
               <!-- Pane Cards List -->
               <div
                 class="tab-pane fade p-3"
@@ -245,26 +259,18 @@
               >
                 <section class="row p-3">
                   <h3>Cards List</h3>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi, odit accusantium maiores quam dicta excepturi similique dolorum earum amet rem!</p>
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Sequi, odit accusantium maiores quam dicta excepturi
+                    similique dolorum earum amet rem!
+                  </p>
                 </section>
               </div>
-
-              <!-- Pane Add Card -->
-              <div
-                class="tab-pane fade p-3"
-                id="nav-addCard"
-                role="tabpanel"
-                aria-labelledby="nav-addCard-tab"
-              >
-                <section class="row p-3">
-                  <h3>Add Card</h3>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi, odit accusantium maiores quam dicta excepturi similique dolorum earum amet rem!</p>
-                </section>
-              </div>
+            </div>
           </div>
+        </main>
       </div>
     </div>
-
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
