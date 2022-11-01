@@ -191,6 +191,7 @@ function EditDeck() {
       // deck tags
       // based on John's office hours 10/31/22
       editDeck.form.tagsListElement.innerHTML = "";
+      editDeck.form.tagsListValues = [];
       editDeck.deck.deck_tags.forEach((t) => {
         editDeck.form.tagsListElement.appendChild(
           editDeck.getNewTagslistItemForDeck(t)
@@ -230,7 +231,6 @@ function EditDeck() {
     });
 
     editDeck.form.form.addEventListener("submit", async (evt) => {
-      console.log(editDeck.deck);
       evt.preventDefault();
 
       // clear past errors to make room for more
