@@ -53,7 +53,7 @@ function IconGenerator() {
     setClass(menu, "dropdown-menu");
     setClass(line, "dropdown-divider");
     setClass(studyLink, "dropdown-item startStudyButton");
-    setHref(studyLink, "#");
+    setHref(studyLink, `./study.html?deckId=${id}`);
 
     options.innerHTML = "Options";
     editLink.innerHTML = "Edit";

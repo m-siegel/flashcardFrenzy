@@ -5,7 +5,6 @@ import renderPage from "./logged-in-demo.js";
 function MyLibrary() {
   const myLibrary = {};
 
-  myLibrary.currentDeckId = null;
 
   myLibrary.setUpPage = async function () {
     const res = await (
