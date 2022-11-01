@@ -5,6 +5,7 @@ import userConnect, {
   getUserById,
   addDeckToLibrary,
   removeDeckFromLibrary,
+  addDeckCreated,
 } from "../databaseConnect/userConnect.js";
 import { availableUsername, createAndAddUser } from "../util/user-util.js";
 import deckConnect from "../databaseConnect/deckConnect.js";
@@ -412,34 +413,36 @@ router.post("/update-deck-author", async (req, res) => {
 
 router.get("/get-user-deck-previews", async (req, res) => {
   const userId = req.session.passport.user;
-  //const userId = "635db5ce21884bfba4a8c3ab";
   const resObject = await deckConnect.getDecksInLibraryPreviews(userId);
-  console.log("the resObject: ", resObject);
-  console.log("the resObject type: ", typeof resObject);
   if (resObject.success) {
     return res.json(resObject.userDeckPreviews);
+  } else {
+    return res.json({ success: false, err: resObject.err });
   }
 });
 
 router.post("/set-current-deck", (req, res) => {
   const deckId = req.body.currentDeckId;
-  console.log("req.body.currentDeckId: ", deckId);
-  req.session.manualData.currentDeck = deckId;
-  res.json({
-    success: true,
-    currentDeckId: req.session.manualData.currentDeck,
-  });
+  if (deckId) {
+    req.session.manualData.currentDeck = deckId;
+    return res.json({
+      success: true,
+      currentDeckId: req.session.manualData.currentDeck,
+    });
+  } else {
+    return res.json({ success: false });
+  }
 });
 
 router.post("/delete-user-from-deck", async (req, res) => {
-  // console.log("req.body.deckId: ", req.session.manualData.currentDeck);
-  // console.log("req.session.passport.user:", req.session.passport.user);
-  await deckConnect.deleteDeck(
+  const responseObj = await deckConnect.deleteDeck(
     req.session.manualData.currentDeck,
     req.session.passport.user
   );
-
-  res.json({ success: false });
+  if (!responseObj.success) {
+    return res.json({ success: false, err: responseObj.err });
+  }
+  return res.json({ success: true });
 });
 
 /**
@@ -447,7 +450,6 @@ router.post("/delete-user-from-deck", async (req, res) => {
  */
 router.post("/remove-deck-from-library", async (req, res) => {
   const deckId = req.body.deckId;
-  //const deckId = req.session.manualData.currentDeck;
   const userId = req.session.passport.user;
   if (!deckId) {
     return res.json({
@@ -484,36 +486,85 @@ router.post("/duplicate-deck", async (req, res) => {
   const resObject = await deckConnect.getDeckById(
     req.session.manualData.currentDeck
   );
+  if (!resObject.success) {
+    return res.json({ success: false, error: resObject.err });
+  }
   const deckToCopy = resObject.deck;
-  console.log("The deck to copy: ", deckToCopy);
   delete deckToCopy._id; //So mongodb will generate a new id
   deckToCopy.active_users.push(req.session.passport.user);
   const currentDate = new Date();
   deckToCopy.date_created = currentDate;
   await deckConnect.addDeckToDb(deckToCopy);
   const copiedDeck = await deckConnect.getDeckByDateCreated(currentDate);
-  await addDeckToLibrary(copiedDeck._id);
-  res.json({ success: true, duplicateDeck: copiedDeck });
+  await addDeckToLibrary(req.session.passport.user, copiedDeck._id);
+  await addDeckCreated(req.session.passport.user, copiedDeck._id);
+  return res.json({ success: true, duplicateDeck: copiedDeck });
 });
 
 router.post("/get-deck-by-id", async (req, res) => {
   const deckRes = await deckConnect.getDeckById(req.body.deckId);
   if (!deckRes.success) {
-    res.json({ success: false, err: deckRes.err });
+    return res.json({ success: false, err: deckRes.err });
   }
-  res.json({ success: true, deck: deckRes.deck });
+  return res.json({ success: true, deck: deckRes.deck });
 });
 
 router.get("/create-deck", async (req, res) => {
   const deckRes = await deckConnect.createDeck(req.session.passport.user);
   if (!deckRes.success) {
-    res.json({ success: false, err: deckRes.err });
+    return res.json({ success: false, err: deckRes.err });
   }
   const deckObj = deckRes.deck;
-  res.json({ success: true, deck: deckObj });
+  const id = deckObj._id.toString();
+  await addDeckToLibrary(id);
+  await addDeckCreated(req.session.passport.user, id);
+  return res.json({ success: true, deck: deckObj });
 });
 
-//add deck to library - expect req to have json with deckID and userID
-//delete deck from library -e
+router.post("/get-cards-in-deck", async (req, res) => {
+  const deckRes = await deckConnect.getDeckById(req.body.deckId);
+  if (!deckRes.success) {
+    return res.json({ success: false, err: deckRes.err });
+  }
+
+  const flashcardArray = deckRes.deck.flashcards;
+  return res.json({ success: true, flashcards: flashcardArray });
+});
+
+router.post("/check-answer", (req, res) => {
+  let resString = req.body.answer;
+  const correctAnswers = req.body.correctAnswers;
+
+  if (
+    correctAnswers.includes(resString) ||
+    correctAnswers.includes(resString.toLowerCase())
+  ) {
+    return res.json({ success: true });
+  } else {
+    return res.json({ success: false });
+  }
+});
+
+router.post("/change-username", async (req, res) => {
+  const newName = req.body.newUsername;
+  const resObject = await userConnect.updateUsername(
+    req.session.passport.user,
+    newName
+  );
+  console.log("The resObject from router");
+  return res.json(resObject);
+});
+
+router.get("/delete-account", async (req, res) => {
+  const resObject = await userConnect.deleteUser(req.session.passport.user);
+  return res.json(resObject);
+});
+
+router.post("/update-deck-flashcards", async (req, res) => {
+  const deckId = req.body.deckId;
+  const flashcards = req.body.flashcardsArray;
+  const resObject = await deckConnect.updateCardsList(deckId, flashcards);
+  return res.json(resObject);
+});
 
 export default router;

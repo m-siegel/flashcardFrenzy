@@ -43,9 +43,9 @@ function DeckConnect() {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
       console.log(
-        await (
-          await mainDatabase.collection(deckCollection)
-        ).findOne({ _id: deckIdObj })
+        await mainDatabase
+          .collection(deckCollection)
+          .findOne({ _id: deckIdObj })
       );
       //remove user from deck's list of active user's
       await mainDatabase
@@ -57,9 +57,6 @@ function DeckConnect() {
       const deckObj = await mainDatabase
         .collection(deckCollection)
         .findOne({ _id: deckIdObj });
-      //using .aggregate and $size, get an object which has the length of deck's active_users array
-      //https://www.tutorialspoint.com/count-the-number-of-items-in-an-array-in-mongodb
-      //const getLength = await mainDatabase.collection(deckCollection).aggregate({$project:{"array_length":{$size: "active_users"}}});
       //if no other active users, then safely delete it from the database
       if (deckObj.active_users.length === 0) {
         await mainDatabase
@@ -86,7 +83,7 @@ function DeckConnect() {
     const deckIdObj = new mongodb.ObjectId(deckId);
     try {
       await client.connect();
-      const mainDatabase = await client.db("MainDatabase");
+      const mainDatabase = client.db("MainDatabase");
       const deckObject = await mainDatabase
         .collection(deckCollection)
         .findOne({ _id: deckIdObj });
@@ -132,7 +129,7 @@ function DeckConnect() {
 
     try {
       await client.connect();
-      const mainDatabase = await client.db("MainDatabase");
+      const mainDatabase = client.db("MainDatabase");
       const userObject = await mainDatabase
         .collection(userCollection)
         .findOne({ _id: userIdObj });
@@ -440,7 +437,7 @@ function DeckConnect() {
     const deckIdObj = new mongodb.ObjectId(deckId);
     try {
       await client.connect();
-      const mainDatabase = await client.db("MainDatabase");
+      const mainDatabase = client.db("MainDatabase");
       await mainDatabase
         .collection(deckCollection)
         .updateOne({ _id: deckIdObj }, { $push: { flashcards: cardObj } });
@@ -479,6 +476,29 @@ function DeckConnect() {
           { _id: deckIdObj },
           { $pull: { flashcards: { id: cardId } } }
         );
+      return { success: true, msg: "Successfully removed flashcard from Deck" };
+    } catch (e) {
+      console.error(e);
+      return {
+        success: false,
+        msg: "Failed to remove card from Deck.",
+        err: e,
+      };
+    } finally {
+      await client.close();
+    }
+  };
+
+  deckConnect.updateCardsList = async function (deckId, cardsList) {
+    const uri = process.env.DB_URI || "mongodb://localhost:27017";
+    const client = new mongodb.MongoClient(uri);
+    const deckIdObj = new mongodb.ObjectId(deckId);
+    try {
+      await client.connect();
+      const mainDatabase = await client.db("MainDatabase");
+      await mainDatabase
+        .collectionName(deckCollection)
+        .updateOne({ _id: deckIdObj }, { $set: { flashcards: cardsList } });
       return { success: true, msg: "Successfully removed flashcard from Deck" };
     } catch (e) {
       console.error(e);
@@ -531,7 +551,7 @@ function DeckConnect() {
 
     try {
       await client.connect();
-      const mainDatabase = await client.db("MainDatabase");
+      const mainDatabase = client.db("MainDatabase");
       await mainDatabase
         .collection(deckCollection)
         .updateOne({ _id: deckIdObj }, { $set: { author: newAuthorStr } });
@@ -556,7 +576,7 @@ function DeckConnect() {
 
     try {
       await client.connect();
-      const mainDatabase = await client.db("MainDatabase");
+      const mainDatabase = client.db("MainDatabase");
       await mainDatabase
         .collection(deckCollection)
         .updateOne({ _id: deckIdObj }, { last_modified: date });
@@ -589,7 +609,7 @@ function DeckConnect() {
 
     try {
       await client.connect();
-      const mainDatabase = await client.db("MainDatabase");
+      const mainDatabase = client.db("MainDatabase");
       await mainDatabase
         .collection(deckCollection)
         .updateOne({ _id: deckIdObj }, { $push: { authorId_chain: authorId } });
