@@ -123,22 +123,15 @@ router.post("/logoutUser", (req, res) => {
 });
 
 /**
- * Expects json body with attributes deckId and userId.
+ * Expects json body with attributes deckId.
  */
 router.post("/remove-deck-from-library", async (req, res) => {
   const deckId = req.body.deckId;
-  const userId = req.body.userId;
+  const userId = req.session.passport.user;
   if (!deckId) {
     return res.json({
       success: false,
       msg: "Cannot remove deck without deckId",
-      err: null,
-    });
-  }
-  if (!userId) {
-    return res.json({
-      success: false,
-      msg: "Cannot remove deck without userId",
       err: null,
     });
   }
@@ -160,22 +153,15 @@ router.post("/remove-deck-from-library", async (req, res) => {
 });
 
 /**
- * Expects json body with attributes deckId and userId.
+ * Expects json body with attributes deckId.
  */
 router.post("/add-deck-to-library", async (req, res) => {
   const deckId = req.body.deckId;
-  const userId = req.body.userId;
+  const userId = req.session.passport.user;
   if (!deckId) {
     return res.json({
       success: false,
       msg: "Cannot add deck without deckId",
-      err: null,
-    });
-  }
-  if (!userId) {
-    return res.json({
-      success: false,
-      msg: "Cannot add deck without userId",
       err: null,
     });
   }
@@ -196,22 +182,15 @@ router.post("/add-deck-to-library", async (req, res) => {
 });
 
 /**
- * Expects json body with attributes deckId and userId.
+ * Expects json body with attributes deckId.
  */
 router.post("/add-deck-to-created", async (req, res) => {
   const deckId = req.body.deckId;
-  const userId = req.body.userId;
+  const userId = req.session.passport.user;
   if (!deckId) {
     return res.json({
       success: false,
       msg: "Cannot add deck without deckId",
-      err: null,
-    });
-  }
-  if (!userId) {
-    return res.json({
-      success: false,
-      msg: "Cannot add deck without userId",
       err: null,
     });
   }
