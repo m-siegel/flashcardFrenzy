@@ -7,6 +7,13 @@ function EditDeck() {
 
   editDeck.deck = null;
 
+  editDeck.tabs = {};
+  editDeck.tabs.deckSettingsTab = document.querySelector(
+    "#nav-deckSettings-tab"
+  );
+  editDeck.tabs.cardsListTab = document.querySelector("#nav-cardsList-tab");
+
+  // Deck setting elements
   editDeck.form = {};
   editDeck.form.form = document.querySelector("#deckSettingsForm");
   editDeck.form.nameElement = document.querySelector("#name");
@@ -22,6 +29,12 @@ function EditDeck() {
   editDeck.form.tagsListValues = [];
   editDeck.form.addTagBtnElement = document.querySelector("#addTagBtn");
 
+  // Card list elements
+  editDeck.cardListContent = document.querySelector("#cardsListContent");
+  editDeck.cardsList = [];
+  editDeck.cardsListSaveCards = document.querySelector("#cardsListSaveCards");
+  editDeck.cardsListAddCard = document.querySelector("#cardsListAddCard");
+
   editDeck.setUpPage = async function () {
     await util.checkAuthenticated(
       "/index",
@@ -32,11 +45,15 @@ function EditDeck() {
   };
 
   editDeck.renderPage = async function () {
-    await editDeck.loadDeck();
+    const gotDeck = await editDeck.loadDeck();
     util.displayPageBody();
     await editDeck.setUpLogoutButtons();
-    editDeck.fillDeckFormFromDeck();
-    editDeck.setUpEditDeckForm();
+    if (gotDeck) {
+      console.log(editDeck.deck);
+      editDeck.fillDeckFormFromDeck();
+      editDeck.setUpEditDeckForm();
+      editDeck.setUpTabListeners();
+    }
   };
 
   editDeck.setUpLogoutButtons = async function () {
@@ -54,11 +71,11 @@ function EditDeck() {
             if (res.success) {
               util.redirect("/index");
             } else {
-              util.showNeutralMessage(res.msg);
+              util.addAlert(editDeck.messageSpotElement, "warning", res.msg);
             }
           }
         } catch (err) {
-          util.showErrorMessage(err);
+          util.addAlert(editDeck.messageSpotElement, "danger", err, "Error:");
         }
       });
     });
@@ -84,21 +101,21 @@ function EditDeck() {
               util.addAlert(
                 editDeck.messageSpotElement,
                 "warning",
-                dbDeckPermissionsResJSON.msg,
+                "",
                 "Could not validate permission to access that deck."
               );
-              // setTimeout(util.redirect("/my-library"), 2000);
-              return;
+              setTimeout(util.redirect, 2000, "/my-library");
+              return false;
             }
           } else {
             util.addAlert(
               editDeck.messageSpotElement,
               "warning",
-              dbDeckPermissionsResJSON.msg,
+              "",
               "Could not validate permission to access that deck."
             );
-            // setTimeout(util.redirect("/my-library"), 2000);
-            return;
+            setTimeout(util.redirect, 2000, "/my-library");
+            return false;
           }
         }
       } catch (err) {
@@ -108,8 +125,8 @@ function EditDeck() {
           err,
           "Error checking deck permissions: "
         );
-        // setTimeout(util.redirect("/my-library"), 2000);
-        return;
+        setTimeout(util.redirect, 2000, "/my-library");
+        return false;
       }
     }
 
@@ -131,11 +148,11 @@ function EditDeck() {
             util.addAlert(
               editDeck.messageSpotElement,
               "warning",
-              dbGetDeckResJSON.msg,
+              "",
               "Could not get deck"
             );
-            // setTimeout(util.redirect("/my-library"), 2000);
-            return;
+            setTimeout(util.redirect, 2000, "/my-library");
+            return false;
           }
         }
       } else {
@@ -150,14 +167,16 @@ function EditDeck() {
             util.addAlert(
               editDeck.messageSpotElement,
               "warning",
-              dbGetDeckResJSON.msg,
+              "",
               "Could not create deck."
             );
-            // setTimeout(util.redirect("/my-library"), 2000);
-            return;
+            setTimeout(util.redirect, 2000, "/my-library");
+            return false;
           }
         }
       }
+      editDeck.cardsList = editDeck.deck.flashcards.slice();
+      return true;
     } catch (err) {
       util.addAlert(
         editDeck.messageSpotElement,
@@ -165,8 +184,8 @@ function EditDeck() {
         err,
         "Error getting the deck:"
       );
-      // setTimeout(util.redirect("/my-library"), 2000);
-      return;
+      setTimeout(util.redirect, 2000, "/my-library");
+      return false;
     }
   };
 
@@ -377,6 +396,101 @@ function EditDeck() {
 
       // rerender form in case anything couldn't be updated
       editDeck.fillDeckFormFromDeck();
+    });
+  };
+
+  editDeck.setUpTabListeners = function () {
+    editDeck.tabs.deckSettingsTab.addEventListener("click", () => {
+      editDeck.fillDeckFormFromDeck();
+    });
+    editDeck.tabs.cardsListTab.addEventListener("click", () => {
+      editDeck.renderCardsList();
+    });
+  };
+
+  editDeck.renderCardsList = function () {
+    editDeck.cardsList = [];
+    editDeck.cardListContent.innerHTML = "";
+    editDeck.deck.flashcards.forEach((c) => {
+      editDeck.cardListContent.appendChild(editDeck.getCardListItem(c));
+    });
+  };
+
+  editDeck.getCardListItem = function (card) {
+    const btn = document.createElement("button");
+    btn.setAttribute("type", "button");
+    btn.className = "btn-close";
+    btn.setAttribute("aria-label", "Close");
+
+    const btnHolder = document.createElement("span");
+    btnHolder.className = "col-sm-2";
+    btnHolder.appendChild(btn);
+
+    const element = document.createElement("div");
+    element.className = "row cardListItem";
+    element.innerHTML = `
+    <span class="col-sm-5"><strong>Side A Prompt:</strong> ${
+      card.sideA.prompt
+    } </span>
+    <span class="col-sm-5"><strong>Side B Answer List:</strong> ${card.sideB.answer_list
+      .map((b) => `${b}, `)
+      .join("")}</span>
+    `;
+    console.log(card);
+    element.appendChild(btnHolder);
+
+    btn.addEventListener("click", () => {
+      element.remove();
+      editDeck.cardsList = editDeck.cardsList.filter((v) => v !== card);
+    });
+    editDeck.cardsList.push(card);
+    return element;
+  };
+
+  editDeck.setUpCardsListButtons = function () {
+    editDeck.cardsListSaveCards.addEventListener("click", async (evt) => {
+      evt.preventDefault();
+      // update deck cards
+      try {
+        let dbCardsRes = await fetch("/update-deck-flashcards", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            deckId: editDeck.deck._id,
+            flashcardsArray: editDeck.cardsList.slice(),
+          }),
+        });
+        if (dbCardsRes.ok) {
+          dbCardsRes = await dbCardsRes.json();
+          if (dbCardsRes.success) {
+            editDeck.deck.flashcards = editDeck.cardsList.slice(); // copy
+          } else {
+            util.addAlert(
+              editDeck.messageSpotElement,
+              "warning",
+              "Couldn't update deck flashcards"
+            );
+          }
+        } else {
+          util.addAlert(
+            editDeck.messageSpotElement,
+            "warning",
+            "Couldn't update deck flashcards"
+          );
+        }
+      } catch (err) {
+        util.addAlert(
+          editDeck.messageSpotElement,
+          "warning",
+          "Error updating deck flashcards:",
+          err
+        );
+      }
+    });
+    editDeck.cardsListAddCard.addEventListener("click", () => {
+      console.log("clicked add card");
     });
   };
 

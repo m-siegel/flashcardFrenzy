@@ -1,3 +1,14 @@
 #tagsList {
   margin-top: 2em;
 }
+
+.cardListItem {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: solid rebeccapurple 2px;
+  padding: 3px;
+}
+
+#cardsListContent {
+  overflow: scroll;
+}
