@@ -361,4 +361,12 @@ router.get("/delete-account", async (req, res) => {
 });
 
 
+router.post("/update-deck-flashcards", async (req, res) => {
+  const deckId = req.body.deckId;
+  const flashcards = req.body.flashcardsArray;
+  const resObject = await deckConnect.updateCardsList(deckId, flashcards);
+  return res.json(resObject);
+});
+
+
 export default router;
