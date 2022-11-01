@@ -173,15 +173,15 @@
               >
                 <section class="row p-3">
                   <h3>Deck Settings</h3>
-                  <form action="">
-                    <div class="row g-3 mt-1 mb-1">
+                  <form action="" id="deckSettingsForm">
+                    <div class="row g-3 mt-1 mb-3">
                       <!-- deck name input -->
-                      <div class="col-12 col-md-6">
+                      <div class="col-12 col-md-8 pe-5 mb-3">
                         <label class="form-label" for="name">Deck Name</label>
-                        <input type="text" class="form-control" id="name" name="name" value="Deck Name" aria-label="Deck name">
+                        <input type="text" class="form-control" id="name" name="name" value="Deck Name" aria-label="Deck name" minlength="1" maxlength="150">
                       </div>
                       <!-- visibility input -->
-                      <div class="col-12 col-md-6 px-5">
+                      <div class="col-12 col-md-4 mt-3">
                         <label class="form-label" for="visibility-radios">Visibility</label>
                         <div id="visibility-radios">
                           <div class="form-check">
@@ -200,18 +200,21 @@
                       </div>
                     </div>
 
-                    <div class="row g-3 mt-1 mb-1">
-                      <!-- deck tags input -->
-                      <div class="col-auto">
-                        <label class="form-label" for="visibility-radios" for="deckTags">Deck Tags</label>
-                        <input type="text" id="deckTags" class="form-control" aria-describedby="tagsList">
+                    <!-- deck tags input -->
+                    <div class="row mt-3">
+                      <div class="row"><label class="form-label" for="deckTags">Deck Tags</label></div>
+                      <div class="row">
+                        <div class="col-12 col-sm-9">
+                          <input type="text" id="deckTags" name="deckTags" class="form-control" aria-describedby="tagsList">
+                        </div>
+                        <div class="col-sm-3 mt-2"><button class="btn btn-primary btn-sm" id="addTagBtn">Add Tag</button></div>
                       </div>
-                      <div class="col-auto">
-                        <span id="tagsList" class="form-text">
-                          <ul class="list-group">
-                            <li class="list-group-item list-group-item-action">Tag 1 <button type="button" class="btn-close" aria-label="Close"></button></li>
-                          </ul>
-                        </span>
+                    </div>
+                    <div class="row g-3 mb-2">
+                      <div id="tagsList" class="form-text">
+                        <ul class="list-group">
+                          <li class="list-group-item list-group-item-action">Tag 1 <button type="button" class="btn-close" aria-label="Close"></button></li>
+                        </ul>
                       </div>
                     </div>
 

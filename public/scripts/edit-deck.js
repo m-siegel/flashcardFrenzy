@@ -2,8 +2,25 @@ import util from "./util.js";
 
 function EditDeck() {
   const editDeck = {};
+
   editDeck.messageSpotElement = document.querySelector("#messageSpot");
+
   editDeck.deck = null;
+
+  editDeck.form = {};
+  editDeck.form.form = document.querySelector("#deckSettingsForm");
+  editDeck.form.nameElement = document.querySelector("#name");
+  editDeck.form.visibilityRadiosElement =
+    document.querySelector("#visibility-radios");
+  editDeck.form.visibilityPublicElement =
+    document.querySelector("#visibility-public");
+  editDeck.form.visibilityPrivateElement = document.querySelector(
+    "#visibility-private"
+  );
+  editDeck.form.deckTagsElement = document.querySelector("#deckTags");
+  editDeck.form.tagsListElement = document.querySelector("#tagsList");
+  editDeck.form.tagsListValues = [];
+  editDeck.form.addTagBtnElement = document.querySelector("#addTagBtn");
 
   editDeck.setUpPage = async function () {
     await util.checkAuthenticated(
@@ -16,8 +33,10 @@ function EditDeck() {
 
   editDeck.renderPage = async function () {
     await editDeck.loadDeck();
-    await editDeck.setUpLogoutButtons();
     util.displayPageBody();
+    await editDeck.setUpLogoutButtons();
+    editDeck.fillDeckFormFromDeck();
+    editDeck.setUpEditDeckForm();
   };
 
   editDeck.setUpLogoutButtons = async function () {
@@ -151,7 +170,176 @@ function EditDeck() {
     }
   };
 
-  editDeck.fillFormFromDeck = function () {};
+  editDeck.fillDeckFormFromDeck = function () {
+    if (editDeck.deck) {
+      // name
+      editDeck.form.nameElement.setAttribute(
+        "value",
+        editDeck.deck.name ? editDeck.deck.name : "Deck Name"
+      );
+      // visibility
+      if (editDeck.deck.public) {
+        editDeck.form.visibilityPublicElement.toggleAttribute("checked", true);
+        editDeck.form.visibilityPrivateElement.toggleAttribute(
+          "checked",
+          false
+        );
+      } else {
+        editDeck.form.visibilityPrivateElement.toggleAttribute("checked", true);
+        editDeck.form.visibilityPublicElement.toggleAttribute("checked", false);
+      }
+      // deck tags
+      // based on John's office hours 10/31/22
+      editDeck.form.tagsListElement.innerHTML = "";
+      editDeck.deck.deck_tags.forEach((t) => {
+        editDeck.form.tagsListElement.appendChild(
+          editDeck.getNewTagslistItemForDeck(t)
+        );
+      });
+    }
+  };
+
+  editDeck.getNewTagslistItemForDeck = function (tag) {
+    const btn = document.createElement("button");
+    btn.setAttribute("type", "button");
+    btn.className = "btn-close";
+    btn.setAttribute("aria-label", "Close");
+
+    const item = document.createElement("li");
+    item.className = "list-group-item list-group-item-action";
+
+    item.innerText = `${tag} `;
+    item.appendChild(btn);
+    btn.addEventListener("click", () => {
+      item.remove();
+      editDeck.form.tagsListValues = editDeck.form.tagsListValues.filter(
+        (v) => v !== tag
+      );
+    });
+    editDeck.form.tagsListValues.push(tag);
+    return item;
+  };
+
+  editDeck.setUpEditDeckForm = function () {
+    editDeck.form.addTagBtnElement.addEventListener("click", (evt) => {
+      evt.preventDefault();
+      const val = editDeck.form.deckTagsElement.value;
+      editDeck.form.tagsListElement.appendChild(
+        editDeck.getNewTagslistItemForDeck(val)
+      );
+    });
+
+    editDeck.form.form.addEventListener("submit", async (evt) => {
+      console.log(editDeck.deck);
+      evt.preventDefault();
+
+      // clear past errors to make room for more
+      editDeck.messageSpotElement.innerHTML = "";
+
+      // update deck name if needed
+      if (
+        editDeck.form.nameElement.value &&
+        editDeck.form.nameElement.value !== editDeck.deck.name
+      ) {
+        let dbNameRes = await fetch("/update-deck-name", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            deckId: editDeck.deck._id,
+            newName: editDeck.form.nameElement.value,
+          }),
+        });
+        if (dbNameRes.ok) {
+          dbNameRes = await dbNameRes.json();
+          if (dbNameRes.success) {
+            editDeck.deck.name = editDeck.form.nameElement.value;
+          } else {
+            util.addAlert(
+              editDeck.messageSpotElement,
+              "warning",
+              "Couldn't update deck name"
+            );
+          }
+        } else {
+          util.addAlert(
+            editDeck.messageSpotElement,
+            "warning",
+            "Couldn't update deck name"
+          );
+        }
+      }
+
+      // udate deck visibility if needed
+      if (
+        (editDeck.form.visibilityPublicElement.checked &&
+          !editDeck.deck.public) ||
+        (editDeck.form.visibilityPrivateElement.checked && editDeck.deck.public)
+      ) {
+        let dbPublicRes = await fetch("/update-deck-privacy", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            deckId: editDeck.deck._id,
+          }),
+        });
+        if (dbPublicRes.ok) {
+          dbPublicRes = await dbPublicRes.json();
+          if (dbPublicRes.success) {
+            editDeck.deck.public = !editDeck.deck.public;
+          } else {
+            util.addAlert(
+              editDeck.messageSpotElement,
+              "warning",
+              "Couldn't update deck privacy"
+            );
+          }
+        } else {
+          util.addAlert(
+            editDeck.messageSpotElement,
+            "warning",
+            "Couldn't update deck privacy"
+          );
+        }
+      }
+
+      // update deck tags
+      let dbTagsRes = await fetch("/update-deck-tags", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          deckId: editDeck.deck._id,
+          tagsArray: editDeck.form.tagsListValues.slice(),
+        }),
+      });
+      if (dbTagsRes.ok) {
+        dbTagsRes = await dbTagsRes.json();
+        if (dbTagsRes.success) {
+          editDeck.deck.deck_tags = editDeck.form.tagsListValues.slice(); // copy
+        } else {
+          util.addAlert(
+            editDeck.messageSpotElement,
+            "warning",
+            "Couldn't update deck tags"
+          );
+        }
+      } else {
+        util.addAlert(
+          editDeck.messageSpotElement,
+          "warning",
+          "Couldn't update deck tags"
+        );
+      }
+
+      // rerender form in case anything couldn't be updated
+      editDeck.fillDeckFormFromDeck();
+    });
+  };
 
   return editDeck;
 }

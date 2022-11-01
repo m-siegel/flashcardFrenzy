@@ -224,7 +224,7 @@ router.get("/get-decks-in-user-library", async (req, res) => {
   return res.json(dbResponse);
 });
 
-router.post("/toggle-deck-privacy", async (req, res) => {
+router.post("/update-deck-privacy", async (req, res) => {
   const deckId = req.body.deckId;
   if (!deckId) {
     return res.json({
