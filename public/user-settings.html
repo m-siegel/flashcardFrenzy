@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="./media/ff-logo-black.svg" type="image/png" />
+    <link rel="icon" href="./media/logo-green-favicon.png" type="image/png" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -18,13 +18,14 @@
   </head>
   <body>
     <header class="container-fluid vw100" id="armea-top-banner">
-      <div class="row" style="min-height: 10vh">
-        <span class="col-1">
+      <div class="row">
+        <span class="col-sm-1 d-none d-sm-flex">
           <img
-            src="./media/ff-logo-white.svg"
+            src="./media/logo.gif"
             alt="flashcard frenzy logo"
-            class="img-fluid" /></span
-        ><span class="col-1">
+            type="image/gif"
+            class="logo" /></span
+        ><span class="col-sm-1 col-2">
           <!-- dropdown navbar shows when window is small -->
           <nav class="armea-dropdown-nav dropdown d-md-none">
             <button
@@ -60,8 +61,8 @@
           </nav>
           <!-- end dropdown navbar -->
         </span>
-        <span class="col-8"><h1>User Settings</h1></span
-        ><span class="col-2">
+        <span class="col-sm-8 col-10"><h1>User Settings</h1></span
+        ><span class="col-sm-2 d-none d-sm-flex">
           <button class="btn btn-primary btn-sm logoutButton" type="submit">
             Log Out
           </button>
@@ -104,7 +105,11 @@
           <div id="messageSpot"></div>
           <div class="row">
             <div class="col-auto">
-              <form class="row row-cols-lg-auto g-3 align-items-center" id="submitUsernameForm" name="submitUsernameForm">
+              <form
+                class="row row-cols-lg-auto g-3 align-items-center"
+                id="submitUsernameForm"
+                name="submitUsernameForm"
+              >
                 <div class="col-12">
                   <label
                     class="visually-hidden"
@@ -123,22 +128,31 @@
                     />
                   </div>
                 </div>
-                <br><br><br><br>
+                <br /><br /><br /><br />
                 <div class="col-12">
-                  <button type="submit" id="submitUsernameButton" class="btn btn-primary">Submit</button>
+                  <button
+                    type="submit"
+                    id="submitUsernameButton"
+                    class="btn btn-primary"
+                  >
+                    Submit
+                  </button>
                 </div>
               </form>
-              </div>
-          <div class="card">
-            <div class="card-header">
-              Remove account
             </div>
-          <div class="card-body">
-              <h5 class="card-title">Do you want to delete your account?</h5>
-                <p class="card-text">Please click submit only if you are sure - this will permanently delete your account and you will no longer be able to access your decks!</p>
-                <a href="/index" class="btn btn-danger" id="deleteButton">Delete Account</a>
-          </div>
-        </div>
+            <div class="card">
+              <div class="card-header">Remove account</div>
+              <div class="card-body">
+                <h5 class="card-title">Do you want to delete your account?</h5>
+                <p class="card-text">
+                  Please click submit only if you are sure - this will
+                  permanently delete your account and you will no longer be able
+                  to access your decks!
+                </p>
+                <a href="/index" class="btn btn-danger" id="deleteButton"
+                  >Delete Account</a
+                >
+              </div>
             </div>
           </div>
         </main>
