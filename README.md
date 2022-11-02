@@ -51,3 +51,7 @@ At the moment, this site may only be used locally using git clone.
 ![Study the decks in your library](https://github.com/m-siegel/flashcardFrenzy/blob/5b0ec28493ac15893fa8e7b411d49e7f54460f42/library.png)
 ![Edit your decks](https://github.com/m-siegel/flashcardFrenzy/blob/5b0ec28493ac15893fa8e7b411d49e7f54460f42/settings.png)
 ![Study a deck](https://github.com/m-siegel/flashcardFrenzy/blob/5b0ec28493ac15893fa8e7b411d49e7f54460f42/study.png)
+
+## You can find a video presentation about our project at the following link:
+
+[Video Presentation](https://drive.google.com/file/d/1nEKVbl24e2O_HtKEFciURqSwYmDL-5Ai/view?usp=share_link)
