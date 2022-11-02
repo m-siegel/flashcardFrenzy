@@ -1,3 +1,4 @@
+/** By Armen Sarkisian */
 import util from "./util.js";
 function UserSettings() {
   const userSettings = {};
@@ -55,15 +56,6 @@ function UserSettings() {
     });
 
   };
-
-
-
-
-
-
-
-
-
 
   return userSettings;
 }

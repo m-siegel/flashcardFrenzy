@@ -1,3 +1,5 @@
+/*By Armen Sarkisian*/
+
 import iconGenerator from "./deck-grid.js";
 import util from "./util.js";
 
@@ -57,22 +59,12 @@ function Explore() {
     }
   };
 
-
-
   explore.setModalEvents = function () {
     const duplicateConfirm = document.querySelector("#modalConfirmDuplicate");
     const duplicateCancel = document.querySelector("#duplicateCancel");
     duplicateConfirm.addEventListener("click", duplicateDeck);
     duplicateCancel.addEventListener("click", clearDeckId);
   };
-
-
-
-
-
-
-
-
 
   return explore;
 }

@@ -1,3 +1,4 @@
+/*Entire file by Armen Sarkisian*/
 import * as mongodb from "mongodb";
 
 function DeckConnect() {
@@ -17,8 +18,14 @@ function DeckConnect() {
     try {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
-      await mainDatabase.collection(deckCollection).insertOne(deckObj);
-      return { success: true, msg: "Successfully added Deck to database." };
+      const response = await mainDatabase.collection(deckCollection).insertOne(deckObj);
+      if (response.acknowledged) {
+        const deckId = response.insertedId.toString();
+        return { success: true, msg: "Successfully added Deck to database.", deckId: deckId};
+      }
+      else {
+        return {success: false, msg: "Could not add Deck to database", err: null};
+      }
     } catch (e) {
       console.error(e);
       return { success: false, msg: "Error adding Deck to database.", err: e };

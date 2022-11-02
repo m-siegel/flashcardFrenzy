@@ -506,14 +506,28 @@ router.post("/duplicate-deck", async (req, res) => {
   }
   const deckToCopy = resObject.deck;
   delete deckToCopy._id; //So mongodb will generate a new id
+  deckToCopy.active_users = [];
   deckToCopy.active_users.push(req.session.passport.user);
+  deckToCopy.authorId = req.session.passport.user;
+  deckToCopy.authorId_chain.push(req.session.passport.user);
+  deckToCopy.public = false;
   const currentDate = new Date();
   deckToCopy.date_created = currentDate;
-  await deckConnect.addDeckToDb(deckToCopy);
-  const copiedDeck = await deckConnect.getDeckByDateCreated(currentDate);
-  await addDeckToLibrary(req.session.passport.user, copiedDeck._id);
-  await addDeckCreated(req.session.passport.user, copiedDeck._id);
-  return res.json({ success: true, duplicateDeck: copiedDeck });
+  const authorObj = await userConnect.getUserById(req.session.passport.user);
+  if (authorObj.success) {
+    const author = authorObj.user.username;
+    deckToCopy.author = author;
+    deckToCopy.author_chain.push(author);
+  }
+  const response = await deckConnect.addDeckToDb(deckToCopy);
+  if (response.success) {
+    await addDeckToLibrary(req.session.passport.user, response.deckId);
+    await addDeckCreated(req.session.passport.user, response.deckId);
+    deckToCopy._id = response.deckId;
+    return res.json({success: true, deckToCopy: deckToCopy});
+  }
+
+  return res.json({ success: false, deckToCopy: null});
 });
 
 router.post("/get-deck-by-id", async (req, res) => {

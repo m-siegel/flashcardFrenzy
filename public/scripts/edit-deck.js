@@ -3,6 +3,8 @@ import util from "./util.js";
 function EditDeck() {
   const editDeck = {};
 
+  editDeck.initiatedDeckCreation = false;
+
   editDeck.messageSpotElement = document.querySelector("#messageSpot");
 
   editDeck.deck = {};
@@ -265,8 +267,9 @@ function EditDeck() {
       // clear past errors to make room for more
       editDeck.messageSpotElement.innerHTML = "";
 
-      if (!editDeck.deck._id) {
+      if (!editDeck.deck._id && !editDeck.initiatedDeckCreation) {
         try {
+          editDeck.initiatedDeckCreation = true;
           const dbGetDeckRes = await fetch("/create-deck");
 
           if (dbGetDeckRes.ok) {

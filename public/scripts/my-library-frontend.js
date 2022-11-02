@@ -1,3 +1,5 @@
+/*Entire file by Armen Sarkisian*/
+
 import util from "./util.js";
 import iconGenerator from "./deck-grid.js";
 
@@ -59,12 +61,12 @@ function MyLibrary() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ deckId: deckId }),
     })).json();
-    const deckToGenerate = res.duplicateDeck.deck;
-    iconGenerator
-      .generateDeckIcon(deckToGenerate.author, deckToGenerate.name, deckToGenerate.deck_tags, deckToGenerate._id);
-    if (!res.ok) {
-      console.error("Failed to duplicate deck");
-      //TODO - get error from res object
+    if (res.err) {
+      console.error(res.err);
+    } else {
+      const deckToGenerate = res.deckToCopy;
+      iconGenerator
+        .generateDeckIcon(deckToGenerate.author, deckToGenerate.name, deckToGenerate.deck_tags, deckToGenerate._id);
     }
   };
 
