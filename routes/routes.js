@@ -439,25 +439,41 @@ router.post("/update-deck-author", async (req, res) => {
 
 /** Armen */
 
+/**
+ * Gets an array of all public Deck objects trimmed down to only include their essential fields.
+ * If successful, sends json object in the HTTP response with the Deck preview objects array
+ * If unsuccessful, sends json object in the HTTP response with success and err fields
+ */
 router.get("/get-user-deck-previews", async (req, res) => {
   const userId = req.session.passport.user;
   const resObject = await deckConnect.getDecksInLibraryPreviews(userId);
   if (resObject.success) {
-    return res.json(resObject.userDeckPreviews);
+    return res.json({success: true, userDeckPreviews: resObject.userDeckPreviews});
   } else {
     return res.json({ success: false, err: resObject.err });
   }
 });
 
+/**
+ * Gets an array of all public Deck objects trimmed down to only include their essential fields.
+ * If successful, sends json object in the HTTP response with the Deck preview objects array
+ * If unsuccessful, sends json object in the HTTP response with success and err fields
+ */
 router.get("/get-public-deck-previews", async (req, res) => {
   const resObject = await deckConnect.getPublicDeckPreviews();
   if (resObject.success) {
-    return res.json(resObject.publicDeckPreviews);
+    return res.json({success: true, publicDeckPreviews: resObject.publicDeckPreviews});
   } else {
     return res.json({ success: false, err: resObject.err });
   }
 });
 
+/**
+ * Saves the currently selected Deck's ID into session.manualData.currentDeck
+ * Expects json object in request body with currentDeckId field
+ * Sends json object in the HTTP response with a success field.
+ * If successful, response includes currentDeckId field
+ */
 router.post("/set-current-deck", (req, res) => {
   const deckId = req.body.currentDeckId;
   if (deckId) {
@@ -471,6 +487,19 @@ router.post("/set-current-deck", (req, res) => {
   }
 });
 
+/**
+ * Sends json object in the HTTP response with deckId obtained from session.manualData.currentDeck
+ */
+router.get("/get-current-deck-id", (req, res) => {
+  const deckId = req.session.manualData.currentDeck;
+  res.json({ deck: deckId });
+});
+
+/**
+ * Removes user from a Deck's active_users array.
+ * Sends json object in the HTTP response with a success field.
+ * If unsuccessful, response includes err field with error received from deckConnect.deleteDeck
+ */
 router.post("/delete-user-from-deck", async (req, res) => {
   const responseObj = await deckConnect.deleteDeck(
     req.session.manualData.currentDeck,
@@ -482,6 +511,11 @@ router.post("/delete-user-from-deck", async (req, res) => {
   return res.json({ success: true });
 });
 
+/**
+ * Adds user to a given Deck's active_users array.
+ * Expects json object in request body with deckId field.
+ * In the HTTP response, passes along the json object obtained from deckConnect.addUserToDeck
+ */
 router.post("/add-user-to-deck", async (req, res) => {
   const userId = req.session.passport.user;
   const deckId = req.body.deckId;
@@ -490,41 +524,10 @@ router.post("/add-user-to-deck", async (req, res) => {
 });
 
 /**
- * Expects json body with attributes deckId and userId.
+ * Creates a duplicate deck from a given deck, and adds the new deck to user's library.
+ * Replaces values of certain fields in the new deck, to separate it from the deck it was copied from.
+ * Sends json object in the HTTP response with success field and deckToCopy field.
  */
-router.post("/remove-deck-from-library", async (req, res) => {
-  const deckId = req.body.deckId;
-  const userId = req.session.passport.user;
-  if (!deckId) {
-    return res.json({
-      success: false,
-      msg: "Cannot remove deck without deckId",
-      err: null,
-    });
-  }
-  if (!userId) {
-    return res.json({
-      success: false,
-      msg: "Cannot remove deck without userId",
-      err: null,
-    });
-  }
-  let dbResponse = await removeDeckFromLibrary(userId, deckId);
-  if (!dbResponse) {
-    return res.json({
-      success: false,
-      msg: "Database error. No response from database.",
-      err: new Error("No response from database"),
-    });
-  }
-
-  return res.json({
-    success: dbResponse.success,
-    msg: dbResponse.msg,
-    err: dbResponse.err,
-  });
-});
-
 router.post("/duplicate-deck", async (req, res) => {
   const resObject = await deckConnect.getDeckById(
     req.session.manualData.currentDeck
@@ -558,6 +561,14 @@ router.post("/duplicate-deck", async (req, res) => {
   return res.json({ success: false, deckToCopy: null });
 });
 
+/**
+ * Gets a Deck object by its ID.
+ * Expects json object in request body with deckId field.
+ * Sends json object in the HTTP response with a success field.
+ * If successful, response object includes deck field containing the Deck object.
+ * If unsuccessful, response object includes err field,
+ * and passes along the error received from deckConnect.getDeckById
+ */
 router.post("/get-deck-by-id", async (req, res) => {
   const deckRes = await deckConnect.getDeckById(req.body.deckId);
   if (!deckRes.success) {
@@ -566,6 +577,13 @@ router.post("/get-deck-by-id", async (req, res) => {
   return res.json({ success: true, deck: deckRes.deck });
 });
 
+/**
+ * Creates a new deck and adds it to user's library.
+ * Sends json object in the HTTP response with a success field.
+ * If successful, response object includes deck field containing the Deck object.
+ * If unsuccessful, response object includes err field,
+ * and passes along the error received from deckConnect.createDeck
+ */
 router.get("/create-deck", async (req, res) => {
   const deckRes = await deckConnect.createDeck(req.session.passport.user);
   if (!deckRes.success) {
@@ -578,6 +596,14 @@ router.get("/create-deck", async (req, res) => {
   return res.json({ success: true, deck: deckObj });
 });
 
+/**
+ * Gets a deck's array of flashcards using the provided deck ID.
+ * Expects json object in request body with deckId field.
+ * Sends json object in the HTTP response containing success field.
+ * If successful, response object includes flashcards field.
+ * If not successful, response object includes err field,
+ * and passes along the error received from deckConnect.getDeckById's response.
+ */
 router.post("/get-cards-in-deck", async (req, res) => {
   const deckRes = await deckConnect.getDeckById(req.body.deckId);
   if (!deckRes.success) {
@@ -588,6 +614,11 @@ router.post("/get-cards-in-deck", async (req, res) => {
   return res.json({ success: true, flashcards: flashcardArray });
 });
 
+/**
+ * Compares a user's answer to a flashcard prompt with the correct answers stored in the flashcard's answers list.
+ * Expects json object in request body with answer field.
+ * Sends json object in the HTTP response with success field.
+ */
 router.post("/check-answer", (req, res) => {
   let resString = req.body.answer;
   const correctAnswers = req.body.correctAnswers;
@@ -602,31 +633,39 @@ router.post("/check-answer", (req, res) => {
   }
 });
 
+/**
+ * Updates a user's username.
+ * Expects json object in request body with newUsername field.
+ * In the HTTP response, passes along the json object obtained from userConnect.updateUsername
+ */
 router.post("/change-username", async (req, res) => {
   const newName = req.body.newUsername;
   const resObject = await userConnect.updateUsername(
     req.session.passport.user,
     newName
   );
-  console.log("The resObject from router");
   return res.json(resObject);
 });
 
+/**
+ * Deletes a user's account.
+ * In the HTTP response, passes along the json object obtained from userConnect.deleteUser
+ */
 router.get("/delete-account", async (req, res) => {
   const resObject = await userConnect.deleteUser(req.session.passport.user);
   return res.json(resObject);
 });
 
+/**
+ * Updates a deck's array of flashcards with a new array of flashcards.
+ * Expects json object in request body with flashcardsArray field.
+ * In the HTTP response, passes along the json object obtained from deckConnect.updateCardsList
+ */
 router.post("/update-deck-flashcards", async (req, res) => {
   const deckId = req.body.deckId;
   const flashcards = req.body.flashcardsArray;
   const resObject = await deckConnect.updateCardsList(deckId, flashcards);
   return res.json(resObject);
-});
-
-router.get("/get-current-deck-id", (req, res) => {
-  const deckId = req.session.manualData.currentDeck;
-  res.json({ deck: deckId });
 });
 
 export default router;

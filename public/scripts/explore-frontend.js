@@ -5,6 +5,7 @@ import util from "./util.js";
 
 function Explore() {
   const explore = {};
+  const messageSpot = document.querySelector("#messageSpot");
 
 
   explore.setUpPage = async function () {
@@ -20,17 +21,23 @@ function Explore() {
   };
 
   explore.renderPublicDecks = async function () {
-    const deckPreviews = await (
+    const resObject = await (
       await fetch("get-public-deck-previews", { method: "GET" })
     ).json();
-    for (let i = 0; i < deckPreviews.length; i++) {
-      iconGenerator.generatePublicDeckIcon(
-        deckPreviews[i].author,
-        deckPreviews[i].name,
-        deckPreviews[i].deck_tags,
-        deckPreviews[i]._id
-      );
+    if (resObject.success) {
+      const deckPreviews = resObject.publicDeckPreviews;
+      for (let i = 0; i < deckPreviews.length; i++) {
+        iconGenerator.generatePublicDeckIcon(
+          deckPreviews[i].author,
+          deckPreviews[i].name,
+          deckPreviews[i].deck_tags,
+          deckPreviews[i]._id
+        );
+      }
+    } else {
+      util.addAlert(messageSpot, "warning", resObject.err, "Uh oh! Could not get the decks");
     }
+
   };
 
   const clearDeckId = async function () {

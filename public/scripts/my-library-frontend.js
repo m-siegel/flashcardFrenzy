@@ -5,6 +5,7 @@ import iconGenerator from "./deck-grid.js";
 
 function MyLibrary() {
   const myLibrary = {};
+  const messageSpot = document.querySelector("#messageSpot");
 
 
   myLibrary.setUpPage = async function () {
@@ -20,17 +21,23 @@ function MyLibrary() {
   };
 
   myLibrary.renderUserDecks = async function () {
-    const deckPreviews = await (
+    const resObject = await (
       await fetch("get-user-deck-previews", { method: "GET" })
     ).json();
-    for (let i = 0; i < deckPreviews.length; i++) {
-      iconGenerator.generateDeckIcon(
-        deckPreviews[i].author,
-        deckPreviews[i].name,
-        deckPreviews[i].deck_tags,
-        deckPreviews[i]._id
-      );
+    if (resObject.success) {
+      const deckPreviews = resObject.userDeckPreviews;
+      for (let i = 0; i < deckPreviews.length; i++) {
+        iconGenerator.generateDeckIcon(
+          deckPreviews[i].author,
+          deckPreviews[i].name,
+          deckPreviews[i].deck_tags,
+          deckPreviews[i]._id
+        );
+      }
+    } else {
+      util.addAlert(messageSpot, "warning", resObject.err, "Uh oh! Could not get the decks.");
     }
+
   };
 
   myLibrary.setModalEvents = function () {
