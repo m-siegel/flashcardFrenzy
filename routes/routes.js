@@ -19,6 +19,9 @@ router.post("/getAuthentication", (req, res) => {
   res.json({ authenticated: req.isAuthenticated() });
 });
 
+/**
+ * Uses passport to authenticate that the user is logged in and redirects them accordingly
+*/
 router.post(
   "/loginUser",
   passport.authenticate("local", {
@@ -27,11 +30,19 @@ router.post(
   })
 );
 
+/**
+ * Clears username and currentDeck data from req.session.manualData
+ * Sends json object in the HTTP response with success and message fields in the body
+*/
 router.get("/loginFailed", (req, res) => {
   req.session.manualData = { username: "", currentDeck: "" };
   res.json({ success: false, msg: "Invalid username or password." });
 });
 
+/**
+ * Initializes req.session.manualData username and currentDeck
+ * Sends json object in the HTTP response with success and message fields in the body
+*/
 router.get("/loginSucceeded", async (req, res) => {
   req.session.manualData = { username: "", currentDeck: "" };
   const dbResponse = await getUserById(req.session.passport.user);

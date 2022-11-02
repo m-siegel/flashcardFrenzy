@@ -1,8 +1,6 @@
 /*Armen Sarkisian and Ilana-Mahmea Siegel (pair programming) */
 import bcrypt from "bcrypt";
-// import { addUser, getUserByUsername } from "../databaseConnect/userConnect.js";
-import { getUserByUsername } from "../databaseConnect/userConnect.js";
-import { addUser } from "../databaseConnect/userConnect.js";
+import { addUser, getUserByUsername } from "../databaseConnect/userConnect.js";
 
 export async function createUser(first, last, username, rawPassword) {
   const salt = await bcrypt.genSalt();
@@ -17,9 +15,9 @@ export async function createUser(first, last, username, rawPassword) {
     decks_in_library: [],
     num_decks_created: 0,
     decks_created: [], // deckIds
-    num_decks_shared: 0,
-    active_streak: 0,
-    recently_studied: [],
+    num_decks_shared: 0, //for future versions
+    active_streak: 0, //for future versions
+    recently_studied: [], //for future versions
   };
 
   return user;

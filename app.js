@@ -3,9 +3,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import dotenv from "dotenv";
-// import flash from "express-flash";
 import session from "express-session";
-// import methodOverride from "method-override";
 import passport from "passport";
 import mainRouter from "./routes/routes.js";
 import initializePassport from "./util/passport-config.js";
@@ -26,7 +24,6 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // https://www.youtube.com/watch?v=-RCnNyD0L-s
-// app.use(flash());
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -37,7 +34,6 @@ app.use(
 initializePassport(passport, getUserByUsername, getUserById);
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(methodOverride("_method"));
 app.use(cookieParser());
 // This is needed to serve html pages with styling
 app.use(express.static(pathToPublicDir));
