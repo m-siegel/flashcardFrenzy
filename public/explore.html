@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./media/logo-green-favicon.png" type="image/png" />
     <title>Explore</title>
     <!-- CSS only -->
     <link
@@ -25,13 +26,14 @@
 
   <body>
     <header class="container-fluid vw100" id="armea-top-banner">
-      <div class="row" style="min-height: 10vh">
-        <span class="col-1">
+      <div class="row">
+        <span class="col-sm-1 d-none d-sm-flex">
           <img
-            src="./media/ff-logo-white.svg"
+            src="./media/logo.gif"
             alt="flashcard frenzy logo"
-            class="img-fluid" /></span
-        ><span class="col-1">
+            type="image/gif"
+            class="logo" /></span
+        ><span class="col-sm-1 col-2">
           <!-- dropdown navbar shows when window is small -->
           <nav class="armea-dropdown-nav dropdown d-md-none">
             <button
@@ -67,14 +69,12 @@
           </nav>
           <!-- end dropdown navbar -->
         </span>
-        <span class="col-8"><h1>Explore</h1></span
-        ><span class="col-2"
-          ><form action="/logout?_method=DELETE" method="POST">
-            <button class="btn btn-primary btn-sm logoutButton" type="submit">
-              Log Out
-            </button>
-          </form></span
-        >
+        <span class="col-sm-8 col-10"><h1>Explore</h1></span
+        ><span class="col-sm-2 d-none d-sm-flex">
+          <button class="btn btn-primary btn-sm logoutButton" type="submit">
+            Log Out
+          </button>
+        </span>
       </div>
     </header>
 
