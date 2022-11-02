@@ -21,7 +21,7 @@ router.post("/getAuthentication", (req, res) => {
 
 /**
  * Uses passport to authenticate that the user is logged in and redirects them accordingly
-*/
+ */
 router.post(
   "/loginUser",
   passport.authenticate("local", {
@@ -33,7 +33,7 @@ router.post(
 /**
  * Clears username and currentDeck data from req.session.manualData
  * Sends json object in the HTTP response with success and message fields in the body
-*/
+ */
 router.get("/loginFailed", (req, res) => {
   req.session.manualData = { username: "", currentDeck: "" };
   res.json({ success: false, msg: "Invalid username or password." });
@@ -42,7 +42,7 @@ router.get("/loginFailed", (req, res) => {
 /**
  * Initializes req.session.manualData username and currentDeck
  * Sends json object in the HTTP response with success and message fields in the body
-*/
+ */
 router.get("/loginSucceeded", async (req, res) => {
   req.session.manualData = { username: "", currentDeck: "" };
   const dbResponse = await getUserById(req.session.passport.user);
@@ -52,18 +52,32 @@ router.get("/loginSucceeded", async (req, res) => {
   res.json({ success: true, msg: "Successful login" });
 });
 
+/**
+ * Sends json object in the HTTP response with value from session.manualData.username field
+ */
 router.post("/getUsername", (req, res) => {
   res.json({ username: req.session.manualData.username });
 });
 
+/**
+ * Sends json object in the HTTP response with value from session.passport.user field
+ */
 router.post("/getUserId", (req, res) => {
   res.json({ user: req.session.passport.user });
 });
 
+/**
+ * Sends json object in the HTTP response with value from session.manualData.currentDeck field
+ */
 router.post("/getCurrentDeck", (req, res) => {
   res.json({ currentDeck: req.session.manualData.currentDeck });
 });
 
+/**
+ * Creates and adds user object if the provided username is available.
+ * Expects json object in request body with username field.
+ * Sends json object in the HTTP response with success and msg fields.
+ */
 router.post("/registerUser", async (req, res) => {
   if (await availableUsername(req.body.username)) {
     createAndAddUser(
@@ -78,6 +92,9 @@ router.post("/registerUser", async (req, res) => {
   }
 });
 
+/**
+ * Logs user
+ */
 router.post("/logoutUser", (req, res) => {
   const body = {
     success: false,
@@ -535,10 +552,10 @@ router.post("/duplicate-deck", async (req, res) => {
     await addDeckToLibrary(req.session.passport.user, response.deckId);
     await addDeckCreated(req.session.passport.user, response.deckId);
     deckToCopy._id = response.deckId;
-    return res.json({success: true, deckToCopy: deckToCopy});
+    return res.json({ success: true, deckToCopy: deckToCopy });
   }
 
-  return res.json({ success: false, deckToCopy: null});
+  return res.json({ success: false, deckToCopy: null });
 });
 
 router.post("/get-deck-by-id", async (req, res) => {
