@@ -50,6 +50,7 @@ function Explore() {
   };
 
   const duplicateDeck = async function () {
+    util.addAlert(messageSpot, "warning", "Duplicating deck...");
     const deckRes = await (
       await fetch("/getCurrentDeck", { method: "POST" })
     ).json();
@@ -61,16 +62,19 @@ function Explore() {
         body: JSON.stringify({ deckId: deckId }),
       })
     ).json();
-    const deckToGenerate = res.duplicateDeck.deck;
-    iconGenerator.generateDeckIcon(
-      deckToGenerate.author,
-      deckToGenerate.name,
-      deckToGenerate.deck_tags,
-      deckToGenerate._id
-    );
-    window.location.replace(`./edit-deck.html?deckId=${deckId}`);
-    if (!res.ok) {
+    if (!res.success) {
       console.error("Failed to duplicate deck");
+    } else {
+      util.addAlert(
+        messageSpot,
+        "success",
+        "Successfully duplicated deck. Redirecting."
+      );
+      setTimeout(() => {
+        window.location.replace(
+          `./edit-deck.html?deckId=${res.deckToCopy._id}`
+        );
+      }, 2000);
     }
   };
 

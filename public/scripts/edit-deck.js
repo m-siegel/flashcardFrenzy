@@ -499,11 +499,11 @@ function EditDeck() {
     //Formatting doesn't match prettier, but ESLint error otherwise
     element.innerHTML = `
     <span class="col-sm-5"><strong>Side A Prompt:</strong> ${
-      card.sideA.prompt
-    } </span>
+  card.sideA.prompt
+} </span>
     <span class="col-sm-5"><strong>Side B Answer List:</strong> ${card.sideB.answer_list
-      .map((b) => `${b}, `)
-      .join("")}</span>
+    .map((b) => `${b}, `)
+    .join("")}</span>
     `;
     element.appendChild(btnHolder);
 
