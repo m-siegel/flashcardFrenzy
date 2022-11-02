@@ -12,7 +12,7 @@ Our **objectives** were
 - To become familiar with Node, Express, MongoDB, and general web development practices like sending and responding to HTTP requests.
 - To create a flashcard website that we could use to study individually and socially.
 
-W used the following **technologies**:
+We used the following **technologies**:
 
 - _Figma_ – for planning and page mock-ups.
 - _HTML_ – for site and page structure.
