@@ -93,7 +93,10 @@ router.post("/registerUser", async (req, res) => {
 });
 
 /**
- * Logs user
+ * Logs out this session's user.
+ * Sends json in HTTP response body with success, type, msg, errors and stage fields. The type
+ * fild indicates which logout process attempts were successful (using passport or manually removing data
+ * with express session alone). The stage field similarly indicates the stage at which a logout attempt failed.
  */
 router.post("/logoutUser", (req, res) => {
   const body = {
@@ -156,7 +159,9 @@ router.post("/logoutUser", (req, res) => {
 });
 
 /**
- * Expects json body with attributes deckId.
+ * Expects HTTP request to have json body with attribute deckId.
+ * Removes the specified deck from the user's library in the database.
+ * Sends json in the HTTP response with success, msg, and err fields.
  */
 router.post("/remove-deck-from-library", async (req, res) => {
   const deckId = req.body.deckId;
@@ -185,7 +190,9 @@ router.post("/remove-deck-from-library", async (req, res) => {
 });
 
 /**
- * Expects json body with attributes deckId.
+ * Expects HTTP request to have json body with attribute deckId.
+ * Adds the specified deck to the user's library in the database.
+ * Sends json in the HTTP response with success, msg, and err fields.
  */
 router.post("/add-deck-to-library", async (req, res) => {
   const deckId = req.body.deckId;
@@ -213,7 +220,9 @@ router.post("/add-deck-to-library", async (req, res) => {
 });
 
 /**
- * Expects json body with attributes deckId.
+ * Expects HTTP request to have json body with attribute deckId.
+ * Adds the specified deck to the user's decks_created array in the database.
+ * Sends json in the HTTP response with success, msg, and err fields.
  */
 router.post("/add-deck-to-created", async (req, res) => {
   const deckId = req.body.deckId;
@@ -240,6 +249,11 @@ router.post("/add-deck-to-created", async (req, res) => {
   });
 });
 
+/**
+ * Gets the array of deck ids in the user's library.
+ * Sends json in the HTTP response with success, msg, and err fields if can't connect to the database.
+ * If connects to the database, forwards the userConnect.getDecksInLibrary response object in the HTTP response.
+ */
 router.get("/get-decks-in-user-library", async (req, res) => {
   const userId = req.session.passport.user;
   let dbResponse = await userConnect.getDecksInLibrary(userId);
@@ -253,6 +267,11 @@ router.get("/get-decks-in-user-library", async (req, res) => {
   return res.json(dbResponse);
 });
 
+/**
+ * Expects req body to be json and have a deckId field.
+ * Calls deckConnect.updateDecPrivacy with the specified deckId.
+ * Sends json in the HTTP response with success, msg, and err fields.
+ */
 router.post("/update-deck-privacy", async (req, res) => {
   const deckId = req.body.deckId;
   if (!deckId) {
@@ -277,6 +296,11 @@ router.post("/update-deck-privacy", async (req, res) => {
   });
 });
 
+/**
+ * Expects req body to be json and have a deckId field and newName field.
+ * Calls deckConnect.updateDeckName with the specified deckId and newName.
+ * Sends json in the HTTP response with success, msg, and err fields.
+ */
 router.post("/update-deck-name", async (req, res) => {
   const deckId = req.body.deckId;
   const newName = req.body.newName;
@@ -309,70 +333,12 @@ router.post("/update-deck-name", async (req, res) => {
   });
 });
 
-router.post("/add-card-to-deck", async (req, res) => {
-  const deckId = req.body.deckId;
-  const card = req.body.card;
-  if (!deckId) {
-    return res.json({
-      success: false,
-      msg: "Cannot add card to deck without deckId",
-      err: null,
-    });
-  }
-  if (!card) {
-    return res.json({
-      success: false,
-      msg: "Cannot add card to deck deck without card",
-      err: null,
-    });
-  }
-  let dbResponse = await deckConnect.addCardToDeck(deckId, card);
-  if (!dbResponse) {
-    return res.json({
-      success: false,
-      msg: "Database error. No response from database.",
-      err: new Error("No response from database"),
-    });
-  }
-  return res.json({
-    success: dbResponse.success,
-    msg: dbResponse.msg,
-    err: dbResponse.err,
-  });
-});
-
-router.post("/remove-card-from-deck", async (req, res) => {
-  const deckId = req.body.deckId;
-  const cardId = req.body.cardId;
-  if (!deckId) {
-    return res.json({
-      success: false,
-      msg: "Cannot remove card from deck without deckId",
-      err: null,
-    });
-  }
-  if (!cardId) {
-    return res.json({
-      success: false,
-      msg: "Cannot remove card from deck without card id",
-      err: null,
-    });
-  }
-  let dbResponse = await deckConnect.removeCardFromDeck(deckId, cardId);
-  if (!dbResponse) {
-    return res.json({
-      success: false,
-      msg: "Database error. No response from database.",
-      err: new Error("No response from database"),
-    });
-  }
-  return res.json({
-    success: dbResponse.success,
-    msg: dbResponse.msg,
-    err: dbResponse.err,
-  });
-});
-
+/**
+ * Sets the specified deck's tags to be the specified tags.
+ * Expects req body to be json and have a deckId field and tagsArray field.
+ * Calls deckConnect.updateDeckTags specified deckId and tags array.
+ * Sends json in the HTTP response with success, msg, and err fields.
+ */
 router.post("/update-deck-tags", async (req, res) => {
   const deckId = req.body.deckId;
   const tagsArray = req.body.tagsArray;
@@ -405,6 +371,12 @@ router.post("/update-deck-tags", async (req, res) => {
   });
 });
 
+/**
+ * Sets the specified deck's tags to the specified author username.
+ * Expects req body to be json and have a deckId field and authorUsername field.
+ * Calls deckConnect.updateDeckAuthor specified deckId and username array.
+ * Sends json in the HTTP response with success, msg, and err fields.
+ */
 router.post("/update-deck-author", async (req, res) => {
   const deckId = req.body.deckId;
   const authorUsername = req.body.authorUsername;
