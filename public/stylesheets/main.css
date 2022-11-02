@@ -8,10 +8,7 @@
 }
 
 body {
-  /* they added */
-  /* padding: 50px; */
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  /* our style */
   box-sizing: border-box;
   /* So unauthenticated users can't see page before redirect */
   display: none;
@@ -26,7 +23,6 @@ a {
 }
 
 #armea-top-banner > div.row {
-  /* display: flex; */
   min-height: 10vh;
   background-color: #000;
   color: #FFF;
@@ -43,8 +39,3 @@ a {
   margin-top: 5px;
 }
 
-.armea-deck-title {
-  background-color: var(--armea-light-blue);
-  color: #FFF;
-  align-items: center;
-}

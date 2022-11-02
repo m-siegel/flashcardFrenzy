@@ -135,8 +135,6 @@ function Util() {
     body.style.display = "block";
   };
 
-  /** Armen */
-
   return util;
 }
 

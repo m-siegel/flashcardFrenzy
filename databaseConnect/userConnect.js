@@ -2,6 +2,7 @@
 
 import * as mongodb from "mongodb";
 
+// Wanted to create connection uri here, but it wouldn't work unless we assigned it inside of each function
 // const uri = process.env.DB_URI || "mongodb://localhost:27017";
 
 const userConnect = {};

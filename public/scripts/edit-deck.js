@@ -1,3 +1,5 @@
+/** Ilana-Mahmea */
+
 import util from "./util.js";
 
 function EditDeck() {
@@ -59,7 +61,7 @@ function EditDeck() {
   editDeck.setUpPage = async function () {
     await util.checkAuthenticated(
       "/index",
-      // Calback for page setup if valid to show page
+      // Callback for page setup if valid to show page
       editDeck.renderPage,
       null
     );
@@ -70,7 +72,6 @@ function EditDeck() {
     util.displayPageBody();
     await editDeck.setUpLogoutButtons();
     if (gotDeck) {
-      console.log(editDeck.deck);
       editDeck.fillDeckFormFromDeck();
       editDeck.setUpEditDeckForm();
       editDeck.setUpTabListeners();
@@ -486,15 +487,15 @@ function EditDeck() {
 
     const element = document.createElement("div");
     element.className = "row cardListItem";
+    //Formatting doesn't match prettier, but ESLint error otherwise
     element.innerHTML = `
     <span class="col-sm-5"><strong>Side A Prompt:</strong> ${
-      card.sideA.prompt
-    } </span>
+  card.sideA.prompt
+} </span>
     <span class="col-sm-5"><strong>Side B Answer List:</strong> ${card.sideB.answer_list
-      .map((b) => `${b}, `)
-      .join("")}</span>
+    .map((b) => `${b}, `)
+    .join("")}</span>
     `;
-    console.log(card);
     element.appendChild(btnHolder);
 
     btn.addEventListener("click", () => {
@@ -542,7 +543,6 @@ function EditDeck() {
         });
         if (dbCardsRes.ok) {
           dbCardsRes = await dbCardsRes.json();
-          console.log(dbCardsRes);
           if (dbCardsRes.success) {
             editDeck.deck.flashcards = editDeck.cardsList.slice(); // copy
             util.addAlert(
@@ -635,7 +635,6 @@ function EditDeck() {
           });
           if (dbCardsRes.ok) {
             dbCardsRes = await dbCardsRes.json();
-            console.log(dbCardsRes);
             if (dbCardsRes.success) {
               editDeck.deck.flashcards = editDeck.cardsList.slice(); // copy
               editDeck.cardListContent.appendChild(

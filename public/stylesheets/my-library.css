@@ -1,28 +1,4 @@
 /*Armen Sarkisian*/
-.offcanvasBg {
-  background-color: #3563D8;
-}
-
-.offcanvas-parent {
-  position: relative;
-  overflow: hidden;
-}
-.offcanvas {
-  position: absolute;
-}
-
-
-
-/*If all page headers will be the same, move this to style.css and just style the h1 element instead of creating a class*/
-.pageHeader {
-  text-align: center;
-  background-color: #2b2d30;
-  color: #ffffff;
-  width: 100%;
-  margin: 0;
-  padding: 7px;
-  font-family: 'Open Sans', sans-serif;
-}
 
 .sectionHeader {
   text-align: center;
@@ -32,8 +8,6 @@ body {
   margin: 0;
   padding: 0;
 }
-
-
 
 .deckIcon {
   width: 150px;
@@ -56,23 +30,6 @@ body {
 .deckGridDisplay {
   margin-left: 200px;
   margin-right: 200px;
-}
-
-.filterBar {
-  color: white;
-  background-color: #3563D8;
-  padding: 15px;
-  text-align: center;
-}
-
-.filterButton {
-  border-color: #FF9900;
-  background-color: white;
-  color: #3563D8;
-}
-
-.filters {
-  white-space:  pre;
 }
 
 .startStudyButton {

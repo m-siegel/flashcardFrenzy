@@ -23,9 +23,7 @@ function UserSettings() {
       } else {
         util.addAlert(messageSpot, "warning", res.msg);
       }
-
     });
-
   };
 
   userSettings.setDeleteEvent = async function() {

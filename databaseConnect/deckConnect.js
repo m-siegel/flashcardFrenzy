@@ -1,4 +1,4 @@
-/*Entire file by Armen Sarkisian*/
+/** Armen Sarkisian */
 import * as mongodb from "mongodb";
 
 function DeckConnect() {
@@ -18,13 +18,22 @@ function DeckConnect() {
     try {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
-      const response = await mainDatabase.collection(deckCollection).insertOne(deckObj);
+      const response = await mainDatabase
+        .collection(deckCollection)
+        .insertOne(deckObj);
       if (response.acknowledged) {
         const deckId = response.insertedId.toString();
-        return { success: true, msg: "Successfully added Deck to database.", deckId: deckId};
-      }
-      else {
-        return {success: false, msg: "Could not add Deck to database", err: null};
+        return {
+          success: true,
+          msg: "Successfully added Deck to database.",
+          deckId: deckId,
+        };
+      } else {
+        return {
+          success: false,
+          msg: "Could not add Deck to database",
+          err: null,
+        };
       }
     } catch (e) {
       console.error(e);
@@ -45,22 +54,13 @@ function DeckConnect() {
     const uri = process.env.DB_URI || "mongodb://localhost:27017";
     const client = new mongodb.MongoClient(uri);
     const deckIdObj = new mongodb.ObjectId(deckId);
-    // const userIdObj = new mongodb.ObjectId(userId);
     try {
       await client.connect();
       const mainDatabase = await client.db("MainDatabase");
-      console.log(
-        await mainDatabase
-          .collection(deckCollection)
-          .findOne({ _id: deckIdObj })
-      );
       //remove user from deck's list of active user's
       await mainDatabase
         .collection(deckCollection)
         .updateOne({ _id: deckIdObj }, { $pull: { active_users: userId } });
-      //remove deck from user's list of decks in library
-      // await mainDatabase.collection(userCollection)
-      //   .updateOne({_id: userIdObj}, {$pull: {decks_in_library: deckId}});
       const deckObj = await mainDatabase
         .collection(deckCollection)
         .findOne({ _id: deckIdObj });
@@ -79,7 +79,7 @@ function DeckConnect() {
     }
   };
 
-  /*
+  /**
   Gets the list of active users for a particular Deck.
   Parameters: ID of the deck
   Returns: Object with 3 fields: success boolean, message string, and active_users (array of user IDs)
@@ -109,12 +109,11 @@ function DeckConnect() {
     }
   };
 
-  /*
+  /**
   Creates a new Deck for a user. Fills in properties with default values, and stores the new Deck in the Deck Collection.
   Adds the new Deck to the user's decks_in_library.
   Parameters: ID of the user who is creating a Deck.
   Returns: Object with 3 fields: success boolean, message string, and deck (the newly created deck object)
-
   */
   deckConnect.createDeck = async function (userId) {
     const newDeck = {};
@@ -127,10 +126,10 @@ function DeckConnect() {
     newDeck.flashcards = [];
     newDeck.public = false;
     newDeck.deck_tags = [];
-    newDeck.description = ""; //for future use
-    newDeck.deck_stats = {}; //for future use
-    newDeck.success_indicators = {}; //for future use
-    newDeck.card_tag_settings = {}; //for future use
+    newDeck.description = ""; //for future version
+    newDeck.deck_stats = {}; //for future version
+    newDeck.success_indicators = {}; //for future version
+    newDeck.card_tag_settings = {}; //for future version
     newDeck.authorId = userId;
     newDeck.last_modified = new Date();
 
@@ -146,11 +145,9 @@ function DeckConnect() {
       newDeck.authorId_chain = [userId];
       newDeck.active_users = [userId];
       await mainDatabase.collection(deckCollection).insertOne(newDeck);
-      //we don't know the new deck's id yet, so query it by current date
       const deckObj = await mainDatabase
         .collection(deckCollection)
         .findOne({ date_created: currentDate });
-      console.log(deckObj);
       const deckId = deckObj._id.toString();
       await mainDatabase
         .collection(userCollection)
@@ -168,7 +165,7 @@ function DeckConnect() {
     }
   };
 
-  /*
+  /**
   Gets a Deck object queried from the database by its ID.
   Parameters: the ID of the deck to be retrieved
   Returns: Object containing 3 fields: success boolean, message string, and deck (the deck object)
@@ -221,7 +218,7 @@ function DeckConnect() {
     }
   };
 
-  /*
+  /**
   Gets a "preview" of all the public decks in the Deck collection. Each Deck preview object contains only a few essential Deck attributes.
   Parameters: None
   Returns: Object with 3 fields: success boolean, message string, and publicDeckPreviews (array of deck preview objects)
@@ -261,7 +258,8 @@ function DeckConnect() {
     }
   };
 
-  /*Gets all the Decks in a user's library.
+  /**
+  Gets all the Decks in a user's library.
   Parameters: ID of the user whose decks to retrieve
   Returns: Object with 3 fields: success boolean, message string, and userDecks(array of deck IDs)
   */
@@ -294,7 +292,7 @@ function DeckConnect() {
     }
   };
 
-  /*
+  /**
   Gets a Deck's list of flashcard objects.
   Parameters: ID of the deck whose flashcards are being requested
   Returns: Object containing 3 fields: success boolean, message string, and flashcards (array of Card objects)
@@ -322,7 +320,7 @@ function DeckConnect() {
     }
   };
 
-  /*
+  /**
   Gets previews of all the decks in the user's library. Each Deck preview object contains only a few essential Deck attributes.
   Parameters: ID of the user whose deck previews are being retrieved
   Returns: Object with 3 fields: success boolean, message string, and userDeckPreviews (array of deck preview objects)
@@ -345,8 +343,6 @@ function DeckConnect() {
         deck._id = deck._id.toString();
         previews.push(deck);
       });
-      const cursor = await decksCursor.toArray();
-      console.log(cursor);
       await decksCursor.close();
       return {
         success: true,
@@ -367,7 +363,7 @@ function DeckConnect() {
 
   /*Updating functions part 1: User-defined updates*/
 
-  /*
+  /**
   Changes a Deck from public to private or private to public.
   Parameters: ID of the Deck to update
   Returns: Object containing success boolean and string message
@@ -409,7 +405,7 @@ function DeckConnect() {
     }
   };
 
-  /*
+  /**
   Updates a Deck's name.
   Parameters: ID of the deck to be updated, new name string
   Returns: Object containing success boolean and string message
@@ -433,69 +429,9 @@ function DeckConnect() {
     }
   };
 
-  /*
-  Adds a new Card to the specified Deck.
-  Parameters: ID of the deck to be updated, Card object to be added to the deck
-  Returns: Object containing 3 fields: success boolean, message string, and modifiedDeck(the modified deck object)
-  */
-  deckConnect.addCardToDeck = async function (deckId, cardObj) {
-    const uri = process.env.DB_URI || "mongodb://localhost:27017";
-    const client = new mongodb.MongoClient(uri);
-    const deckIdObj = new mongodb.ObjectId(deckId);
-    try {
-      await client.connect();
-      const mainDatabase = client.db("MainDatabase");
-      await mainDatabase
-        .collection(deckCollection)
-        .updateOne({ _id: deckIdObj }, { $push: { flashcards: cardObj } });
-      const deck = await mainDatabase
-        .collection(deckCollection)
-        .findOne({ _id: deckIdObj });
-      return {
-        success: true,
-        msg: "Successfully added card to Deck",
-        modifiedDeck: deck,
-      };
-    } catch (e) {
-      console.error(e);
-      return { success: false, msg: "Error adding flashcard to deck", err: e };
-    } finally {
-      await client.close();
-    }
-  };
-
-  /*
-  Removes a particular Card from the specified Deck.
-  Parameters: ID of the deck to be updated, ID of the flashcard to be removed
-  Returns: Object containing success boolean and message string
-  */
-  deckConnect.removeCardFromDeck = async function (deckId, cardId) {
-    const uri = process.env.DB_URI || "mongodb://localhost:27017";
-    const client = new mongodb.MongoClient(uri);
-    const deckIdObj = new mongodb.ObjectId(deckId);
-
-    try {
-      await client.connect();
-      const mainDatabase = await client.db("MainDatabase");
-      await mainDatabase
-        .collection(deckCollection)
-        .updateOne(
-          { _id: deckIdObj },
-          { $pull: { flashcards: { id: cardId } } }
-        );
-      return { success: true, msg: "Successfully removed flashcard from Deck" };
-    } catch (e) {
-      console.error(e);
-      return {
-        success: false,
-        msg: "Failed to remove card from Deck.",
-        err: e,
-      };
-    } finally {
-      await client.close();
-    }
-  };
-
+  /**
+   * Replaces the array of flashcards in a Deck with a new array of flashcards.
+   */
   deckConnect.updateCardsList = async function (deckId, cardsList) {
     const uri = process.env.DB_URI || "mongodb://localhost:27017";
     const client = new mongodb.MongoClient(uri);
@@ -519,7 +455,7 @@ function DeckConnect() {
     }
   };
 
-  /*
+  /**
   Replaces a Deck's existing array of Deck Tags with an updated array of new Deck Tags.
   Parameters: ID of the deck to be updated, array of deck tag strings
   Returns: Object containing success boolean and message string
@@ -546,7 +482,7 @@ function DeckConnect() {
 
   /*Updating functions part 2: Internal updating functions*/
 
-  /*
+  /**
   Updates a Deck's author. If a user ever changes their username, this function will be called on each Deck in their library.
   Parameters: ID of the deck to be updated, new author string
   Returns: Object containing success boolean and message string
@@ -571,7 +507,7 @@ function DeckConnect() {
     }
   };
 
-  /*
+  /**
   Updates a Deck's last_modified field. Anytime a user edits one of their existing Decks, this function will be called.
   Parameters: ID of the deck to be updated, Date object representing the date/time the Deck was being edited
   Returns: Object containing success boolean and message string
@@ -603,7 +539,7 @@ function DeckConnect() {
     }
   };
 
-  /*
+  /**
   Updates a Deck's author chain. Appends user ID to its author_Id_chain, and appends username to its author_chain
   Parameters: ID of deck to be updated, ID of user who is the latest author of the Deck
   Returns: Object containing success boolean and message string
@@ -635,6 +571,9 @@ function DeckConnect() {
     }
   };
 
+  /**
+   * Adds user to the Deck's active_users array.
+   *  */
   deckConnect.addUserToDeck = async function (deckId, userId) {
     const uri = process.env.DB_URI || "mongodb://localhost:27017";
     const client = new mongodb.MongoClient(uri);

@@ -1,4 +1,4 @@
-// import renderPage from "./logged-in-demo.js";
+/** Armen Sarkisian */
 import util from "./util.js";
 
 function Study() {
@@ -29,7 +29,6 @@ function Study() {
     const res = await (
       await fetch("/getAuthentication", { method: "POST" })
     ).json();
-    console.log("res is: ", res);
     if (!res.authenticated) {
       return util.redirect("/index");
     }
@@ -43,10 +42,13 @@ function Study() {
   };
 
   study.showNextFlashcard = async function () {
-    console.log("Current flashcard counter: ", flashcardCounter);
     const flashcards = await study.getFlashcards();
     if (flashcardCounter >= flashcards.length) {
-      util.addAlert(messageSpot, "success", "Wow! You made it through the whole deck. Congratulations!");
+      util.addAlert(
+        messageSpot,
+        "success",
+        "Wow! You made it through the whole deck. Congratulations!"
+      );
       return;
     }
     const promptDiv = document.querySelector(".card-title");
@@ -59,7 +61,6 @@ function Study() {
     flashcardCounter += 1;
   };
 
-
   study.configureFormSubmit = async function () {
     const submitForm = document.querySelector("#submitAnswerForm");
     submitForm.addEventListener("submit", async (evt) => {
@@ -71,7 +72,10 @@ function Study() {
         await fetch("/check-answer", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ answer: ans, correctAnswers: currentFlashcardAnswers}),
+          body: JSON.stringify({
+            answer: ans,
+            correctAnswers: currentFlashcardAnswers,
+          }),
         })
       ).json();
 

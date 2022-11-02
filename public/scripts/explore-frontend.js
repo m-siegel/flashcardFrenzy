@@ -7,12 +7,10 @@ function Explore() {
   const explore = {};
   const messageSpot = document.querySelector("#messageSpot");
 
-
   explore.setUpPage = async function () {
     const res = await (
       await fetch("/getAuthentication", { method: "POST" })
     ).json();
-    console.log("res is: ", res);
     if (!res.authenticated) {
       return util.redirect("/index");
     }
@@ -35,9 +33,13 @@ function Explore() {
         );
       }
     } else {
-      util.addAlert(messageSpot, "warning", resObject.err, "Uh oh! Could not get the decks");
+      util.addAlert(
+        messageSpot,
+        "warning",
+        resObject.err,
+        "Uh oh! Could not get the decks"
+      );
     }
-
   };
 
   const clearDeckId = async function () {
@@ -52,14 +54,20 @@ function Explore() {
       await fetch("/getCurrentDeck", { method: "POST" })
     ).json();
     const deckId = deckRes.currentDeck;
-    const res = await (await fetch("/duplicate-deck", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ deckId: deckId }),
-    })).json();
+    const res = await (
+      await fetch("/duplicate-deck", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ deckId: deckId }),
+      })
+    ).json();
     const deckToGenerate = res.duplicateDeck.deck;
-    iconGenerator
-      .generateDeckIcon(deckToGenerate.author, deckToGenerate.name, deckToGenerate.deck_tags, deckToGenerate._id);
+    iconGenerator.generateDeckIcon(
+      deckToGenerate.author,
+      deckToGenerate.name,
+      deckToGenerate.deck_tags,
+      deckToGenerate._id
+    );
     window.location.replace(`./edit-deck.html?deckId=${deckId}`);
     if (!res.ok) {
       console.error("Failed to duplicate deck");

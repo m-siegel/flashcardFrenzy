@@ -1,4 +1,4 @@
-/*Entire file by Armen Sarkisian*/
+/** Armen Sarkisian */
 
 import util from "./util.js";
 import iconGenerator from "./deck-grid.js";
@@ -7,12 +7,10 @@ function MyLibrary() {
   const myLibrary = {};
   const messageSpot = document.querySelector("#messageSpot");
 
-
   myLibrary.setUpPage = async function () {
     const res = await (
       await fetch("/getAuthentication", { method: "POST" })
     ).json();
-    console.log("res is: ", res);
     if (!res.authenticated) {
       return util.redirect("/index");
     }
@@ -35,9 +33,13 @@ function MyLibrary() {
         );
       }
     } else {
-      util.addAlert(messageSpot, "warning", resObject.err, "Uh oh! Could not get the decks.");
+      util.addAlert(
+        messageSpot,
+        "warning",
+        resObject.err,
+        "Uh oh! Could not get the decks."
+      );
     }
-
   };
 
   myLibrary.setModalEvents = function () {
@@ -63,17 +65,23 @@ function MyLibrary() {
       await fetch("/getCurrentDeck", { method: "POST" })
     ).json();
     const deckId = deckRes.currentDeck;
-    const res = await (await fetch("/duplicate-deck", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ deckId: deckId }),
-    })).json();
+    const res = await (
+      await fetch("/duplicate-deck", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ deckId: deckId }),
+      })
+    ).json();
     if (res.err) {
       console.error(res.err);
     } else {
       const deckToGenerate = res.deckToCopy;
-      iconGenerator
-        .generateDeckIcon(deckToGenerate.author, deckToGenerate.name, deckToGenerate.deck_tags, deckToGenerate._id);
+      iconGenerator.generateDeckIcon(
+        deckToGenerate.author,
+        deckToGenerate.name,
+        deckToGenerate.deck_tags,
+        deckToGenerate._id
+      );
     }
   };
 
@@ -96,9 +104,7 @@ function MyLibrary() {
     if (!res.ok || !res2.ok) {
       console.error("Error deleting the deck");
     }
-
   };
-
 
   return myLibrary;
 }

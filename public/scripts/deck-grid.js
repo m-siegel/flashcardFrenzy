@@ -1,7 +1,6 @@
-/*Entire file by Armen Sarkisian*/
+/** Armen Sarkisian*/
 
 function IconGenerator() {
-
   const iconGenerator = {};
 
   const deckGrid = document.querySelector("#deckGrid");
@@ -12,7 +11,7 @@ function IconGenerator() {
     element.setAttribute("href", hrefName);
   };
 
-  iconGenerator.generateDeckIcon = function(author, name, deckTags, id) {
+  iconGenerator.generateDeckIcon = function (author, name, deckTags, id) {
     const div = document.createElement("div");
     const p = document.createElement("p");
     const nav = document.createElement("ul");
@@ -60,15 +59,14 @@ function IconGenerator() {
     deleteLink.innerHTML = "Delete";
     duplicateLink.innerHTML = "Duplicate";
     studyLink.innerHTML = "Start Study Session";
-    //TODO - get individual deck tags, not the whole array
     p.innerHTML = `${name}<br /><br />${author}<br /><br />${deckTags}`;
     deckGrid.appendChild(div);
     div.appendChild(p);
-    
+
     p.appendChild(nav);
     nav.appendChild(dropdownArrow);
     dropdownArrow.appendChild(options);
-    
+
     dropdownArrow.appendChild(menu);
     menu.appendChild(editDeck);
 
@@ -89,25 +87,29 @@ function IconGenerator() {
 
     deleteLink.addEventListener("click", async () => {
       const idToSend = div.getAttribute("id");
-      await fetch("/set-current-deck", {method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({currentDeckId: idToSend})});
+      await fetch("/set-current-deck", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentDeckId: idToSend }),
+      });
     });
 
     duplicateLink.addEventListener("click", async () => {
       const idToSend = div.getAttribute("id");
-      await fetch("/set-current-deck", {method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({currentDeckId: idToSend})});
+      await fetch("/set-current-deck", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentDeckId: idToSend }),
+      });
     });
-
-
   };
 
-  iconGenerator.createModal = function(element, dataTarget) {
+  iconGenerator.createModal = function (element, dataTarget) {
     element.setAttribute("data-bs-toggle", "modal");
     element.setAttribute("data-bs-target", dataTarget);
-
   };
 
-
-  iconGenerator.removeIcon = function(deckIconId) {
+  iconGenerator.removeIcon = function (deckIconId) {
     const parent = document.getElementById(deckIconId);
     while (parent.firstChild) {
       parent.removeChild(parent.firstChild);
@@ -115,17 +117,13 @@ function IconGenerator() {
     parent.remove();
   };
 
-
-
-
-  iconGenerator.generatePublicDeckIcon = function(author, name, deckTags, id) {
+  iconGenerator.generatePublicDeckIcon = function (author, name, deckTags, id) {
     const div = document.createElement("div");
     const p = document.createElement("p");
     const nav = document.createElement("ul");
     const dropdownArrow = document.createElement("li");
     const options = document.createElement("a");
     const menu = document.createElement("ul");
-
 
     const duplicateDeck = document.createElement("li");
     const duplicateLink = document.createElement("a");
@@ -160,13 +158,12 @@ function IconGenerator() {
     p.innerHTML = `${name}<br /><br />${author}<br /><br />${deckTags}`;
     deckGrid.appendChild(div);
     div.appendChild(p);
-    
+
     p.appendChild(nav);
     nav.appendChild(dropdownArrow);
     dropdownArrow.appendChild(options);
-    
-    dropdownArrow.appendChild(menu);
 
+    dropdownArrow.appendChild(menu);
 
     menu.appendChild(duplicateDeck);
     duplicateDeck.appendChild(duplicateLink);
@@ -179,21 +176,16 @@ function IconGenerator() {
 
     duplicateLink.addEventListener("click", async () => {
       const idToSend = div.getAttribute("id");
-      await fetch("/set-current-deck", {method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({currentDeckId: idToSend})});
+      await fetch("/set-current-deck", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentDeckId: idToSend }),
+      });
     });
-
-
-
-
   };
- 
-
 
   return iconGenerator;
 }
 
-
-
-
-
+// We've looked into the error in the browser console, and have not been able to find out why it says "unexpected token export"
 export default IconGenerator();

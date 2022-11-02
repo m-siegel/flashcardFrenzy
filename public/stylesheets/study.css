@@ -1,10 +1,7 @@
+/** Armen Sarkisian */
+
 .card.mb-3 {
   max-width: 540px;
   border-width: 10px;
   text-align: center;
-}
-
-.cardDisplay {
-  margin-left: 200px;
-  margin-right: 200px;
 }
