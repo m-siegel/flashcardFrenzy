@@ -4,7 +4,6 @@ import passport from "passport";
 import userConnect, {
   getUserById,
   addDeckToLibrary,
-  removeDeckFromLibrary,
   addDeckCreated,
 } from "../databaseConnect/userConnect.js";
 import { availableUsername, createAndAddUser } from "../util/user-util.js";
@@ -420,7 +419,10 @@ router.get("/get-user-deck-previews", async (req, res) => {
   const userId = req.session.passport.user;
   const resObject = await deckConnect.getDecksInLibraryPreviews(userId);
   if (resObject.success) {
-    return res.json({success: true, userDeckPreviews: resObject.userDeckPreviews});
+    return res.json({
+      success: true,
+      userDeckPreviews: resObject.userDeckPreviews,
+    });
   } else {
     return res.json({ success: false, err: resObject.err });
   }
@@ -434,7 +436,10 @@ router.get("/get-user-deck-previews", async (req, res) => {
 router.get("/get-public-deck-previews", async (req, res) => {
   const resObject = await deckConnect.getPublicDeckPreviews();
   if (resObject.success) {
-    return res.json({success: true, publicDeckPreviews: resObject.publicDeckPreviews});
+    return res.json({
+      success: true,
+      publicDeckPreviews: resObject.publicDeckPreviews,
+    });
   } else {
     return res.json({ success: false, err: resObject.err });
   }
