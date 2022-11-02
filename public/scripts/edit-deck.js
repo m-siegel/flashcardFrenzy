@@ -5,7 +5,7 @@ function EditDeck() {
 
   editDeck.messageSpotElement = document.querySelector("#messageSpot");
 
-  editDeck.deck = null;
+  editDeck.deck = {};
 
   editDeck.tabs = {};
   editDeck.tabs.deckSettingsTab = document.querySelector(
@@ -176,24 +176,10 @@ function EditDeck() {
           }
         }
       } else {
-        const dbGetDeckRes = await fetch("/create-deck");
-
-        if (dbGetDeckRes.ok) {
-          const dbGetDeckResJSON = await dbGetDeckRes.json();
-
-          if (dbGetDeckResJSON.success) {
-            editDeck.deck = dbGetDeckResJSON.deck;
-          } else {
-            util.addAlert(
-              editDeck.messageSpotElement,
-              "warning",
-              "",
-              "Could not create deck."
-            );
-            setTimeout(util.redirect, 2000, "/my-library");
-            return false;
-          }
-        }
+        editDeck.deck.name = "";
+        editDeck.deck.deck_tags = [];
+        editDeck.deck.public = false;
+        editDeck.deck.flashcards = [];
       }
       editDeck.cardsList = editDeck.deck.flashcards.slice();
       return true;
@@ -278,6 +264,37 @@ function EditDeck() {
 
       // clear past errors to make room for more
       editDeck.messageSpotElement.innerHTML = "";
+
+      if (!editDeck.deck._id) {
+        try {
+          const dbGetDeckRes = await fetch("/create-deck");
+
+          if (dbGetDeckRes.ok) {
+            const dbGetDeckResJSON = await dbGetDeckRes.json();
+
+            if (dbGetDeckResJSON.success) {
+              editDeck.deck = dbGetDeckResJSON.deck;
+            } else {
+              util.addAlert(
+                editDeck.messageSpotElement,
+                "warning",
+                "",
+                "Could not create deck."
+              );
+              setTimeout(util.redirect, 2000, "/my-library");
+              return false;
+            }
+          }
+        } catch (e) {
+          util.addAlert(
+            editDeck.messageSpotElement,
+            "danger",
+            e,
+            "Error creating deck"
+          );
+          return false;
+        }
+      }
 
       // update deck name if needed
       try {
