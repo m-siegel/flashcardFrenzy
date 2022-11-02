@@ -43,3 +43,11 @@ At the moment, this site may only be used locally using git clone.
 ## For a look into our design process, check out
 - [Our early visual design documents](https://drive.google.com/file/d/1HmAm91xn3q6zwJUTtpU_qo1F2rrK3mAL/view?usp=sharing)
 - [Our brainstorming of the organization of modules, routes and functions](https://drive.google.com/file/d/1pVqPjIFLGXW6LBXxO3TMZGAiOlnAKDpG/view?usp=sharing)
+
+## A Peek into our Site
+![Register](https://github.com/m-siegel/flashcardFrenzy/blob/5b0ec28493ac15893fa8e7b411d49e7f54460f42/register.png)
+![Login](https://github.com/m-siegel/flashcardFrenzy/blob/5b0ec28493ac15893fa8e7b411d49e7f54460f42/login.png)
+![Explore public decks](https://github.com/m-siegel/flashcardFrenzy/blob/ce4669850962c20c295c6a63168d0b963ef51e98/explore.png)
+![Study the decks in your library](https://github.com/m-siegel/flashcardFrenzy/blob/5b0ec28493ac15893fa8e7b411d49e7f54460f42/library.png)
+![Edit your decks](https://github.com/m-siegel/flashcardFrenzy/blob/5b0ec28493ac15893fa8e7b411d49e7f54460f42/settings.png)
+![Study a deck](https://github.com/m-siegel/flashcardFrenzy/blob/5b0ec28493ac15893fa8e7b411d49e7f54460f42/study.png)
