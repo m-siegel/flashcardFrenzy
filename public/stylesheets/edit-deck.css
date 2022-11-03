@@ -20,3 +20,8 @@
   color: #FFF;
   align-items: center;
 }
+
+#answerDisplay {
+  overflow: scroll;
+  max-height: 40vh;
+}

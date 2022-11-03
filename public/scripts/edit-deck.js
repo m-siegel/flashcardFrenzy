@@ -57,7 +57,7 @@ function EditDeck() {
     document.querySelector("#cardBtnSaveCard");
   editDeck.newCardModal.cardAnswers = document.querySelector("#cardAnswers");
   editDeck.newCardModal.cardAnswersListJS = [];
-  editDeck.newCardModal.answerList = document.querySelector("#answerList");
+  editDeck.newCardModal.answerList = document.querySelector("#answerDisplay");
   editDeck.newCardModal.prompt = document.querySelector("#prompt");
   editDeck.cardSaveButtonClickable = true;
 
@@ -479,6 +479,7 @@ function EditDeck() {
   editDeck.renderCardsList = function () {
     editDeck.cardsList = [];
     editDeck.cardListContent.innerHTML = "";
+    editDeck.cardsList = editDeck.deck.flashcards.slice();
     editDeck.deck.flashcards.forEach((c) => {
       editDeck.cardListContent.appendChild(editDeck.getCardListItem(c));
     });
@@ -499,11 +500,11 @@ function EditDeck() {
     //Formatting doesn't match prettier, but ESLint error otherwise
     element.innerHTML = `
     <span class="col-sm-5"><strong>Side A Prompt:</strong> ${
-  card.sideA.prompt
-} </span>
+      card.sideA.prompt
+    } </span>
     <span class="col-sm-5"><strong>Side B Answer List:</strong> ${card.sideB.answer_list
-    .map((b) => `${b}, `)
-    .join("")}</span>
+      .map((b) => `${b}, `)
+      .join("")}</span>
     `;
     element.appendChild(btnHolder);
 
@@ -511,7 +512,6 @@ function EditDeck() {
       element.remove();
       editDeck.cardsList = editDeck.cardsList.filter((v) => v !== card);
     });
-    editDeck.cardsList.push(card);
     return element;
   };
 
@@ -555,28 +555,28 @@ function EditDeck() {
           if (dbCardsRes.success) {
             editDeck.deck.flashcards = editDeck.cardsList.slice(); // copy
             util.addAlert(
-              editDeck.modalMessageSpotElement,
+              editDeck.messageSpotElement,
               "success",
               "",
               "Saved cards"
             );
           } else {
             util.addAlert(
-              editDeck.modalMessageSpotElement,
+              editDeck.messageSpotElement,
               "warning",
               "Couldn't update deck flashcards"
             );
           }
         } else {
           util.addAlert(
-            editDeck.modalMessageSpotElement,
+            editDeck.messageSpotElement,
             "warning",
             "Couldn't update deck flashcards"
           );
         }
       } catch (err) {
         util.addAlert(
-          editDeck.modalMessageSpotElement,
+          editDeck.messageSpotElement,
           "warning",
           "Error updating deck flashcards:",
           err
@@ -586,12 +586,19 @@ function EditDeck() {
 
     editDeck.newCardModal.addAnswerBtn.addEventListener("click", (evt) => {
       evt.preventDefault();
+      editDeck.modalMessageSpotElement.innerHTML = "";
       const val = editDeck.newCardModal.cardAnswers.value;
       if (val && val.length > 0) {
         editDeck.newCardModal.answerList.appendChild(
           editDeck.getNewCardAnswerItem(val)
         );
         editDeck.newCardModal.cardAnswers.value = "";
+      } else {
+        util.addAlert(
+          editDeck.modalMessageSpotElement,
+          "warning",
+          "Answer must be at least one character long."
+        );
       }
     });
 
@@ -599,6 +606,7 @@ function EditDeck() {
       "submit",
       async (evt) => {
         evt.preventDefault();
+        editDeck.modalMessageSpotElement.innerHTML = "";
 
         // clear past errors to make room for more
         editDeck.modalMessageSpotElement.innerHTML = "";
