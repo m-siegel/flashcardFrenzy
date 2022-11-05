@@ -26,13 +26,14 @@ We used the following **technologies**:
 - _Bcrypt_ - for hashing and comparing passwords.
 - _MongoDB_ - for a database to store user and flashcard data.
 
-Want to know more? See my
+Want to know more? See my (some links missed here?:))
 
 ## How to use this
 
 At the moment, this site may only be used locally using git clone.
 
 ### Using Locally with git clone
+(this is a very nice and clear instructions!)
 
 1. Clone this repository.
 2. Install all the dependencies listed in the package.json file. If you have npm installed, this can be done through 'npm install'
