@@ -646,3 +646,11 @@ router.post("/update-deck-flashcards", async (req, res) => {
 });
 
 export default router;
+
+
+//The structure of routes looks intuitive
+//However, I would suggest you to divide this file to
+//several files, for example, put sign-in in an individual
+//file in your routes folder and put register in another file
+//in the same file as well. This may makes the entire routes 
+//more organized.
