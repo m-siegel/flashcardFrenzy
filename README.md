@@ -30,7 +30,7 @@ Want to know more? See my
 
 ## How to use this
 
-At the moment, this site may only be used locally using git clone.
+You can check out our app by visiting the deployed version at this link [https://flashcard-frenzy.herokuapp.com/](https://flashcard-frenzy.herokuapp.com/) or by downloading and launching our app locally (see instructions below).
 
 ### Using Locally with git clone
 
